@@ -85,7 +85,7 @@ export class AlbumService {
   }
 
   friendSummary(username: string): Observable<AlbumSummary> {
-    return this.http.get<AlbumSummary>(`${environment.apiUrl}/album/users/${username}/summary`);
+    return this.http.get<AlbumSummary>(`${environment.apiUrl}/album/users/${encodeURIComponent(username)}/summary`);
   }
 
   private applyLocal(us: UserSticker): void {

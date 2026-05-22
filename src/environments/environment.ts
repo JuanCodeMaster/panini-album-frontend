@@ -8,7 +8,7 @@ import { Capacitor } from '@capacitor/core';
 // En nativo (Capacitor Android / iOS) apuntamos directo al backend en
 // Railway — así no dependes de tu IP LAN ni del firewall del PC.
 // ──────────────────────────────────────────────────────────────────────
-const WEB_API_URL = 'http://localhost:8081/api';
+const WEB_API_URL = 'https://panini-album-backend-production.up.railway.app/api';
 const RAILWAY_API_URL = 'https://panini-album-backend-production.up.railway.app/api';
 
 const isNative = Capacitor.isNativePlatform();

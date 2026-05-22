@@ -34,7 +34,7 @@ export class SocialService {
   }
 
   sendRequest(username: string): Observable<Friendship> {
-    return this.http.post<Friendship>(`${this.baseUrl}/requests/${username}`, {});
+    return this.http.post<Friendship>(`${this.baseUrl}/requests/${encodeURIComponent(username)}`, {});
   }
 
   accept(id: number): Observable<Friendship> {
@@ -46,11 +46,11 @@ export class SocialService {
   }
 
   unfriend(username: string): Observable<unknown> {
-    return this.http.delete(`${this.baseUrl}/friends/${username}`);
+    return this.http.delete(`${this.baseUrl}/friends/${encodeURIComponent(username)}`);
   }
 
   tradeMatches(friendUsername: string): Observable<TradeMatch> {
-    return this.http.get<TradeMatch>(`${this.tradesUrl}/matches/${friendUsername}`);
+    return this.http.get<TradeMatch>(`${this.tradesUrl}/matches/${encodeURIComponent(friendUsername)}`);
   }
 
   tradeSuggestions(limit = 3): Observable<TradeSuggestion[]> {
