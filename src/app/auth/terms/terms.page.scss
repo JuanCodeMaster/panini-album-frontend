@@ -1,0 +1,115 @@
+.terms-content {
+  --background: var(--m-bg);
+  --padding-bottom: 48px;
+}
+
+.app-header {
+  padding: 14px 18px 10px;
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--m-muted);
+    padding: 4px 4px 4px 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-bottom: 6px;
+
+    ion-icon { font-size: 18px; }
+  }
+
+  .display-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--m-ink);
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.32em;
+
+    .accent { color: var(--m-primary); }
+  }
+
+  .header-sub {
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--m-muted);
+  }
+}
+
+.doc {
+  padding: 8px 22px 24px;
+  max-width: 720px;
+  margin: 0 auto;
+
+  section {
+    margin: 22px 0;
+
+    h2 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 17px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--m-accent);
+    }
+
+    p {
+      margin: 0 0 10px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--m-ink);
+    }
+
+    ul {
+      margin: 6px 0 10px;
+      padding-left: 22px;
+
+      li {
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.55;
+        color: var(--m-ink);
+        margin-bottom: 4px;
+      }
+    }
+
+    a {
+      color: var(--m-primary);
+      font-weight: 700;
+      text-decoration: none;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .footer-note {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--m-surface);
+    border: 1px solid var(--m-hairline);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--m-muted);
+    text-align: center;
+    font-style: italic;
+  }
+}

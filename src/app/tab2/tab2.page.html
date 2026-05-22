@@ -1,0 +1,140 @@
+<ion-content [fullscreen]="true" class="album-content">
+  <!-- Big display header -->
+  <div class="app-header">
+    <h1 class="display-title">
+      <span>Mi</span>
+      <span class="accent">álbum</span>
+    </h1>
+    <div class="header-sub">{{ filtered().length }} selecciones · 980 cromos</div>
+  </div>
+
+  <!-- Especiales CTA -->
+  <button class="specials-cta" (click)="openSpecials()">
+    <div class="sp-icon"><ion-icon name="sparkles"></ion-icon></div>
+    <div class="sp-text">
+      <div class="sp-title">Cromos especiales</div>
+      <div class="sp-sub">Logo, sedes, museo y fotos de equipo</div>
+    </div>
+    <ion-icon name="arrow-forward" class="sp-arrow"></ion-icon>
+  </button>
+
+  <!-- Search + Filters -->
+  <div class="toolbar">
+    <div class="search">
+      <ion-icon name="search"></ion-icon>
+      <input
+        type="text"
+        [value]="query()"
+        (input)="onSearch($event)"
+        placeholder="Buscar país o jugador (ej. Messi)…"
+      />
+      @if (query()) {
+        <button class="clear" (click)="clearSearch()" aria-label="Limpiar">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      }
+    </div>
+
+    <div class="filters">
+      <button class="chip" [class.active]="filter() === 'all'" (click)="setFilter('all')">Todas</button>
+      <button class="chip" [class.active]="filter() === 'almost'" (click)="setFilter('almost')">Casi listas</button>
+      <button class="chip" [class.active]="filter() === 'empty'" (click)="setFilter('empty')">Vacías</button>
+    </div>
+
+    <div class="group-filters">
+      <span class="gf-label">Grupo</span>
+      @for (g of availableGroups(); track g) {
+        <button
+          class="g-chip"
+          [class.active]="selectedGroup() === g"
+          (click)="toggleGroup(g)"
+        >{{ g }}</button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  <!-- Country rows -->
+  <div class="rows">
+    @for (c of filtered(); track c.code) {
+      <div class="row-wrap" [class.expanded]="isExpanded(c.code)">
+        <button class="row" (click)="toggleExpand(c.code)">
+          <span class="thumb">
+            <img [src]="flag(c.iso2)" [alt]="c.name" loading="lazy" />
+          </span>
+
+          <span class="info">
+            <span class="info-top">
+              @if (c.wcGroup) {
+                <span class="wc-group-chip">{{ c.wcGroup }}</span>
+              }
+              <span class="group-chip">{{ c.code }}</span>
+              <span class="name">{{ c.name }}</span>
+              @if (isComplete(c.code)) {
+                <span class="badge gold">✓</span>
+              }
+            </span>
+            <span class="info-bottom">
+              <span class="bar">
+                <span
+                  class="fill"
+                  [class.gold]="isComplete(c.code)"
+                  [class.muted]="isEmpty(c.code)"
+                  [style.width.%]="(obtained(c.code) / 20) * 100"
+                ></span>
+              </span>
+              <span class="mono">{{ obtained(c.code) }}/20</span>
+            </span>
+          </span>
+
+          <ion-icon name="chevron-down" class="chev"></ion-icon>
+        </button>
+
+        @if (isExpanded(c.code)) {
+          <div class="inline-grid">
+            @if (stickersFor(c.code).length === 0) {
+              <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+            } @else {
+              <div class="slot-grid">
+                @for (s of stickersFor(c.code); track s.code) {
+                  <button
+                    class="slot-wrap"
+                    [class.match]="matchesQuery(s)"
+                    (click)="toggleSticker(s.code)"
+                  >
+                    <div
+                      class="slot"
+                      [class.owned]="isOwned(s.code)"
+                      [class.foil]="s.foil"
+                    >
+                      @if (isOwned(s.code)) {
+                        <img [src]="flag(c.iso2)" alt="" class="bg" />
+                      }
+                      <span class="slot-num">{{ s.numberInCountry }}</span>
+                      @if (s.foil) {
+                        <span class="foil-tag">F</span>
+                      }
+                      @if (qty(s.code) > 1) {
+                        <span class="dup-tag">×{{ qty(s.code) }}</span>
+                      }
+                    </div>
+                    <div class="slot-name" [class.muted]="!isOwned(s.code)">
+                      {{ s.displayName }}
+                    </div>
+                  </button>
+                }
+              </div>
+              <button class="view-all" (click)="openCountry(c.code)">
+                Ver todas
+                <ion-icon name="arrow-forward"></ion-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ion-content>

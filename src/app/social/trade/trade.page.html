@@ -1,0 +1,219 @@
+<ion-content [fullscreen]="true" class="trade-content">
+  @if (loading()) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="banner error">
+      <ion-icon name="alert-circle"></ion-icon>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="banner success">
+      <ion-icon name="checkmark"></ion-icon>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  @if (match(); as m) {
+    <div class="hero">
+      <div class="halftone"></div>
+      <div class="hash-corner"></div>
+
+      <button class="back-btn" (click)="back()" aria-label="Volver">
+        <ion-icon name="chevron-back"></ion-icon>
+        <span>Atrás</span>
+      </button>
+
+      <div class="hero-body">
+        <div class="avatar">{{ initials(m.friend.displayName, m.friend.username) }}</div>
+        <div class="info">
+          <div class="kicker">Intercambio con</div>
+          <h1 class="title">{{ m.friend.displayName || m.friend.username }}</h1>
+          <div class="handle">&#64;{{ m.friend.username }}</div>
+        </div>
+        <button class="album-link" (click)="openAlbum()" aria-label="Ver álbum">
+          <ion-icon name="swap-horizontal"></ion-icon>
+        </button>
+      </div>
+
+      <div class="mode-switch">
+        <button class="mode-btn" [class.active]="mode() === 'trade'" (click)="setMode('trade')">
+          <ion-icon name="swap-horizontal"></ion-icon>
+          <span>Intercambio</span>
+        </button>
+        <button class="mode-btn" [class.active]="mode() === 'gift'" (click)="setMode('gift')">
+          <ion-icon name="gift"></ion-icon>
+          <span>Regalo</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="head-left">
+          <div class="head-icon give">
+            <ion-icon name="arrow-up"></ion-icon>
+          </div>
+          <div>
+            <div class="head-title">Tú das</div>
+            <div class="head-sub">
+              {{ selectedGive().size }} / {{ m.youGive.length }} seleccionados
+            </div>
+          </div>
+        </div>
+        @if (m.youGive.length > 0) {
+          <button class="text-action" (click)="selectAllGive()">Todos</button>
+        }
+      </div>
+
+      @if (m.youGive.length === 0) {
+        <div class="empty">
+          <p>No tienes repetidas que {{ m.friend.displayName || m.friend.username }} necesite</p>
+          <p class="hint">Vuelve cuando consigas más cromos</p>
+        </div>
+      } @else {
+        @for (g of groupedGive(); track g.countryCode || g.countryName) {
+          <div class="group">
+            <div class="group-head">
+              @if (g.iso2) {
+                <img [src]="flag(g.iso2)" [alt]="g.countryName" />
+              }
+              <span class="g-name">{{ g.countryName }}</span>
+              <span class="g-count">{{ g.stickers.length }}</span>
+            </div>
+            <div class="picker-grid">
+              @for (s of g.stickers; track s.code) {
+                <button
+                  class="pick"
+                  [class.selected]="isGiveSelected(s.code)"
+                  [class.foil]="s.foil"
+                  (click)="toggleGive(s.code)"
+                >
+                  <div class="pick-photo">
+                    @if (s.imageUrl) {
+                      <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                    } @else {
+                      <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
+                    }
+                    @if (isGiveSelected(s.code)) {
+                      <div class="check"><ion-icon name="checkmark"></ion-icon></div>
+                    }
+                    @if (s.foil) {
+                      <span class="foil-tag">F</span>
+                    }
+                  </div>
+                  <div class="pick-info">
+                    <div class="pick-name">{{ s.displayName }}</div>
+                    <div class="pick-code">{{ s.code }}</div>
+                  </div>
+                </button>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    @if (mode() === 'trade') {
+      <div class="section">
+        <div class="section-head">
+          <div class="head-left">
+            <div class="head-icon receive">
+              <ion-icon name="arrow-down"></ion-icon>
+            </div>
+            <div>
+              <div class="head-title">Tú recibes</div>
+              <div class="head-sub">
+                {{ selectedReceive().size }} / {{ m.youReceive.length }} seleccionados
+              </div>
+            </div>
+          </div>
+          @if (m.youReceive.length > 0) {
+            <button class="text-action" (click)="selectAllReceive()">Todos</button>
+          }
+        </div>
+
+        @if (m.youReceive.length === 0) {
+          <div class="empty">
+            <p>{{ m.friend.displayName || m.friend.username }} no tiene repetidas que necesites</p>
+            <p class="hint">Quizá quieras enviarle un regalo</p>
+          </div>
+        } @else {
+          @for (g of groupedReceive(); track g.countryCode || g.countryName) {
+            <div class="group">
+              <div class="group-head">
+                @if (g.iso2) {
+                  <img [src]="flag(g.iso2)" [alt]="g.countryName" />
+                }
+                <span class="g-name">{{ g.countryName }}</span>
+                <span class="g-count">{{ g.stickers.length }}</span>
+              </div>
+              <div class="picker-grid">
+                @for (s of g.stickers; track s.code) {
+                  <button
+                    class="pick receive"
+                    [class.selected]="isReceiveSelected(s.code)"
+                    [class.foil]="s.foil"
+                    (click)="toggleReceive(s.code)"
+                  >
+                    <div class="pick-photo">
+                      @if (s.imageUrl) {
+                        <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                      } @else {
+                        <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
+                      }
+                      @if (isReceiveSelected(s.code)) {
+                        <div class="check"><ion-icon name="checkmark"></ion-icon></div>
+                      }
+                      @if (s.foil) {
+                        <span class="foil-tag">F</span>
+                      }
+                    </div>
+                    <div class="pick-info">
+                      <div class="pick-name">{{ s.displayName }}</div>
+                      <div class="pick-code">{{ s.code }}</div>
+                    </div>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <div class="msg-section">
+      <label>Mensaje (opcional)</label>
+      <textarea
+        rows="2"
+        maxlength="280"
+        [value]="message()"
+        (input)="onMessageChange($event)"
+        placeholder="Escribe algo para tu amigo…"
+      ></textarea>
+    </div>
+
+    <div class="send-bar">
+      <div class="send-info">
+        @if (mode() === 'gift') {
+          <div class="big">Regalas {{ selectedGive().size }}</div>
+          <div class="sub">cromos sin pedir nada a cambio</div>
+        } @else {
+          <div class="big">{{ selectedGive().size }} ↔ {{ selectedReceive().size }}</div>
+          <div class="sub">das / recibes</div>
+        }
+      </div>
+      <button class="send-btn" [disabled]="!canSend() || sending()" (click)="send()">
+        @if (sending()) {
+          <ion-spinner name="dots"></ion-spinner>
+        } @else {
+          <ion-icon name="send-outline"></ion-icon>
+          <span>{{ mode() === 'gift' ? 'Enviar regalo' : 'Proponer intercambio' }}</span>
+        }
+      </button>
+    </div>
+  }
+</ion-content>

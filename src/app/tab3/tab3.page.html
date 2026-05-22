@@ -1,0 +1,101 @@
+<ion-content [fullscreen]="true" class="stats-content">
+  <!-- Display header -->
+  <div class="app-header">
+    <h1 class="display-title">
+      <span>Mi</span>
+      <span class="accent">progreso</span>
+    </h1>
+    <div class="header-sub">Estadísticas del álbum</div>
+  </div>
+
+  @if (loading() && !summary()) {
+    <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (summary(); as s) {
+    <!-- Hero ring -->
+    <div class="hero-ring">
+      <div class="halftone"></div>
+      <div class="hash-stripes hash-corner"></div>
+      <app-progress-ring
+        [value]="progressValue()"
+        [size]="140"
+        [thickness]="11"
+        color="#D4AF37"
+        track="rgba(255,255,255,0.18)"
+        ink="#FFFFFF"
+        [label]="pctLabel()"
+        sub="Tu colección"
+      ></app-progress-ring>
+      <div class="ring-side">
+        <div class="big-num">{{ s.obtained }}<span class="sep">/{{ s.totalStickers }}</span></div>
+        <div class="kicker">Cromos pegados</div>
+      </div>
+    </div>
+
+    <!-- Counters -->
+    <div class="counters">
+      <button class="counter c-ok">
+        <div class="c-num">{{ s.obtained }}</div>
+        <div class="c-label">Obtenidos</div>
+      </button>
+      <button class="counter c-miss" (click)="goMissing()">
+        <div class="c-num">{{ s.missing }}</div>
+        <div class="c-label">Faltantes</div>
+      </button>
+      <button class="counter c-dup" (click)="goDuplicates()">
+        <div class="c-num">{{ s.duplicates }}</div>
+        <div class="c-label">Repetidas</div>
+      </button>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa primary" (click)="goDuplicates()">
+        <ion-icon name="layers"></ion-icon>
+        Ver mis repetidas
+      </button>
+      <button class="qa outline" (click)="goMissing()">
+        <ion-icon name="search-outline"></ion-icon>
+        Ver mis faltantes
+      </button>
+    </div>
+
+    <div class="section-title"><span>Top 5</span><span class="accent">·</span></div>
+    <div class="rank-list">
+      @for (r of topCountries(); track r.code) {
+        <button class="rank-row" (click)="openCountry(r.code)">
+          <img [src]="flag(r.iso2)" [alt]="r.name" class="thumb" />
+          <div class="info">
+            <div class="name">{{ r.name }}</div>
+            <div class="row-progress">
+              <div class="bar"><div class="fill gold" [style.width.%]="r.progressPct"></div></div>
+              <span class="mono">{{ r.obtained }}/{{ r.total }} · {{ r.progressPct }}%</span>
+            </div>
+          </div>
+          <ion-icon name="arrow-forward" class="chev"></ion-icon>
+        </button>
+      }
+    </div>
+
+    <div class="section-title"><span>Las que más faltan</span><span class="accent">·</span></div>
+    <div class="rank-list">
+      @for (r of bottomCountries(); track r.code) {
+        <button class="rank-row" (click)="openCountry(r.code)">
+          <img [src]="flag(r.iso2)" [alt]="r.name" class="thumb" />
+          <div class="info">
+            <div class="name">{{ r.name }}</div>
+            <div class="row-progress">
+              <div class="bar"><div class="fill primary" [style.width.%]="r.progressPct"></div></div>
+              <span class="mono">{{ r.obtained }}/{{ r.total }} · {{ r.progressPct }}%</span>
+            </div>
+          </div>
+          <ion-icon name="arrow-forward" class="chev"></ion-icon>
+        </button>
+      }
+    </div>
+  }
+</ion-content>

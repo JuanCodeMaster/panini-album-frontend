@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true" class="cd-content">
+  @if (loading()) {
+    <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage() && country(); as c) {
+    <div class="hero" [style.background-image]="'linear-gradient(180deg, rgba(10,26,61,0.55) 0%, rgba(10,26,61,0.95) 100%), url(' + flag(c.iso2) + ')'">
+      <div class="halftone"></div>
+      <div class="hash-stripes hash-corner"></div>
+
+      <button class="back-btn" (click)="back()" aria-label="Volver">
+        <ion-icon name="chevron-back"></ion-icon>
+        <span>Atrás</span>
+      </button>
+
+      <div class="hero-info">
+        <div class="kicker">
+          @if (c.wcGroup) {
+            <span class="grp wc">Grupo {{ c.wcGroup }}</span>
+          }
+          <span class="grp">{{ c.code }}</span>
+        </div>
+        <h1 class="title">{{ c.name }}</h1>
+        <div class="progress-line">
+          <div class="bar"><div class="fill" [style.width.%]="(obtainedCount() / stickers().length) * 100"></div></div>
+          <span class="mono">{{ obtainedCount() }}/{{ stickers().length }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      @for (s of stickers(); track s.code) {
+        <div
+          class="sticker"
+          [class.owned]="isObtained(s.code)"
+          [class.foil]="s.foil"
+          [class.team-photo]="s.stickerType === 'TEAM_PHOTO'"
+          [class.badge]="s.stickerType === 'BADGE'"
+          (click)="toggle(s.code)"
+        >
+          @if (isObtained(s.code)) {
+            <div class="card">
+              <div class="image">
+                @if (s.imageUrl) {
+                  <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                } @else if (s.stickerType === 'TEAM_PHOTO') {
+                  <ion-icon name="image" class="ph"></ion-icon>
+                } @else {
+                  <ion-icon name="person" class="ph"></ion-icon>
+                }
+                <span class="num-badge">{{ s.numberInCountry }}</span>
+                @if (s.foil) {
+                  <span class="foil-badge">FOIL</span>
+                }
+              </div>
+              <div class="label">
+                <div class="name">{{ s.displayName }}</div>
+                <div class="code">{{ s.code }}</div>
+              </div>
+            </div>
+
+            @if (qty(s.code) > 1) {
+              <div class="qty-bubble">×{{ qty(s.code) }}</div>
+            }
+
+            <div class="dup-controls" (click)="$event.stopPropagation()">
+              <button (click)="decrement(s.code, $event)" aria-label="Restar">
+                <ion-icon name="remove"></ion-icon>
+              </button>
+              <button (click)="increment(s.code, $event)" aria-label="Sumar">
+                <ion-icon name="add"></ion-icon>
+              </button>
+            </div>
+          } @else {
+            <div class="empty-slot">
+              <div class="empty-num">#{{ s.numberInCountry }}</div>
+              <div class="empty-label">Falta</div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</ion-content>

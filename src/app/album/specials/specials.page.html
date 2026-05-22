@@ -1,0 +1,75 @@
+<ion-content [fullscreen]="true" class="sp-content">
+  <div class="app-header">
+    <button class="back-btn" (click)="back()" aria-label="Volver">
+      <ion-icon name="chevron-back"></ion-icon>
+      <span>Atrás</span>
+    </button>
+    <h1 class="display-title">
+      <span>Cromos</span>
+      <span class="accent">especiales</span>
+    </h1>
+    <div class="header-sub">Logo, sedes, museo y fotos de equipo</div>
+  </div>
+
+  @if (loading()) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    @for (g of groups(); track g.key) {
+      <div class="section">
+        <div class="section-head">
+          <div class="sh-icon"><ion-icon [name]="g.icon"></ion-icon></div>
+          <div class="sh-text">
+            <div class="sh-title">{{ g.title }}</div>
+            <div class="sh-sub">{{ g.sub }}</div>
+          </div>
+          <div class="sh-count">{{ g.stickers.length }}</div>
+        </div>
+
+        <div class="special-grid">
+          @for (s of g.stickers; track s.code) {
+            <button
+              class="special-card"
+              [class.owned]="isObtained(s.code)"
+              [class.foil]="s.foil"
+              (click)="toggle(s.code)"
+            >
+              <div class="sc-photo">
+                @if (s.imageUrl) {
+                  <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                } @else if (s.countryCode && countryFlag(s.countryCode)) {
+                  <img [src]="countryFlag(s.countryCode)" [alt]="countryName(s.countryCode)" loading="lazy" />
+                } @else {
+                  <ion-icon [name]="iconFor(s)" class="ph"></ion-icon>
+                }
+                <span class="sc-code">{{ s.code }}</span>
+                @if (s.foil) {
+                  <span class="sc-foil">FOIL</span>
+                }
+                @if (qty(s.code) > 1) {
+                  <span class="sc-qty">×{{ qty(s.code) }}</span>
+                }
+                @if (isObtained(s.code)) {
+                  <div class="sc-check">
+                    <ion-icon name="checkmark"></ion-icon>
+                  </div>
+                }
+              </div>
+              <div class="sc-info">
+                <div class="sc-name">{{ s.displayName }}</div>
+                @if (s.countryCode) {
+                  <div class="sc-meta">{{ countryName(s.countryCode) }}</div>
+                }
+              </div>
+            </button>
+          }
+        </div>
+      </div>
+    }
+  }
+</ion-content>

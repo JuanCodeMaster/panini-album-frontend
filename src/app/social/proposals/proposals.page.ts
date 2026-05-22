@@ -1,0 +1,143 @@
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { IonContent, IonIcon, IonSpinner } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  arrowDown,
+  arrowUp,
+  gift,
+  swapHorizontal,
+  checkmark,
+  close,
+  time,
+  chevronBack,
+  trash,
+} from 'ionicons/icons';
+import { SocialService } from '../../core/services/social.service';
+import { CatalogService } from '../../core/services/catalog.service';
+import { TradeProposal } from '../../core/models/trade-proposal.model';
+import { Sticker } from '../../core/models/catalog.model';
+
+type Tab = 'incoming' | 'outgoing' | 'history';
+
+@Component({
+  selector: 'app-proposals',
+  templateUrl: './proposals.page.html',
+  styleUrls: ['./proposals.page.scss'],
+  imports: [CommonModule, IonContent, IonIcon, IonSpinner],
+})
+export class ProposalsPage implements OnInit {
+  private readonly social = inject(SocialService);
+  private readonly catalog = inject(CatalogService);
+  private readonly router = inject(Router);
+
+  readonly loading = signal(true);
+  readonly errorMessage = signal<string | null>(null);
+  readonly tab = signal<Tab>('incoming');
+  readonly incoming = signal<TradeProposal[]>([]);
+  readonly outgoing = signal<TradeProposal[]>([]);
+  readonly history = signal<TradeProposal[]>([]);
+  readonly stickerByCode = signal<Map<string, Sticker>>(new Map());
+
+  readonly list = computed<TradeProposal[]>(() => {
+    if (this.tab() === 'incoming') return this.incoming();
+    if (this.tab() === 'outgoing') return this.outgoing();
+    return this.history();
+  });
+
+  constructor() {
+    addIcons({
+      arrowDown,
+      arrowUp,
+      gift,
+      swapHorizontal,
+      checkmark,
+      close,
+      time,
+      chevronBack,
+      trash,
+    });
+  }
+
+  ngOnInit(): void {
+    this.refresh();
+  }
+
+  refresh(): void {
+    this.loading.set(true);
+    forkJoin({
+      stickers: this.catalog.allStickers(),
+      incoming: this.social.incomingProposals(),
+      outgoing: this.social.outgoingProposals(),
+      history: this.social.proposalHistory(),
+    }).subscribe({
+      next: ({ stickers, incoming, outgoing, history }) => {
+        this.stickerByCode.set(new Map(stickers.map((s) => [s.code, s])));
+        this.incoming.set(incoming);
+        this.outgoing.set(outgoing);
+        this.history.set(history);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.errorMessage.set(err?.error?.message ?? 'Error al cargar propuestas');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  setTab(t: Tab): void {
+    this.tab.set(t);
+  }
+
+  initials(name: string | null, fallback: string): string {
+    const n = (name || fallback).trim();
+    const parts = n.split(/\s+/);
+    return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? parts[0]?.[1] ?? '')).toUpperCase();
+  }
+
+  stickerName(code: string): string {
+    return this.stickerByCode().get(code)?.displayName ?? code;
+  }
+
+  stickerImage(code: string): string | null {
+    return this.stickerByCode().get(code)?.imageUrl ?? null;
+  }
+
+  isFoil(code: string): boolean {
+    return this.stickerByCode().get(code)?.foil ?? false;
+  }
+
+  // Para incoming/history, el otro lado es el requester
+  // Para outgoing, el otro lado es el addressee
+  otherUser(p: TradeProposal) {
+    return this.tab() === 'outgoing' ? p.addressee : p.requester;
+  }
+
+  accept(id: number): void {
+    this.social.acceptProposal(id).subscribe({
+      next: () => this.refresh(),
+      error: (err) => this.errorMessage.set(err?.error?.message ?? 'Error al aceptar'),
+    });
+  }
+
+  reject(id: number): void {
+    this.social.rejectProposal(id).subscribe(() => this.refresh());
+  }
+
+  cancel(id: number): void {
+    this.social.cancelProposal(id).subscribe(() => this.refresh());
+  }
+
+  back(): void {
+    this.router.navigateByUrl('/tabs/friends');
+  }
+
+  statusLabel(p: TradeProposal): string {
+    if (p.status === 'ACCEPTED') return 'Aceptado';
+    if (p.status === 'REJECTED') return 'Rechazado';
+    if (p.status === 'CANCELLED') return 'Cancelado';
+    return 'Pendiente';
+  }
+}

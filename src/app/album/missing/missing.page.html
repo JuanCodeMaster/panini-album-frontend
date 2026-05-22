@@ -1,0 +1,99 @@
+<ion-content [fullscreen]="true" class="missing-content">
+  <div class="app-header">
+    <button class="back-btn" (click)="back()" aria-label="Volver">
+      <ion-icon name="chevron-back"></ion-icon>
+      <span>Atrás</span>
+    </button>
+    <h1 class="display-title">
+      <span>Te</span>
+      <span class="accent">faltan</span>
+    </h1>
+    <div class="header-sub">
+      @if (!loading()) {
+        {{ stickers().length }} cromos por completar
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    @if (stickers().length === 0) {
+      <div class="empty-state">
+        <ion-icon name="sparkles" class="big"></ion-icon>
+        <h2 class="text-display">¡Álbum completo!</h2>
+        <p>No te falta ningún cromo. 🎉</p>
+      </div>
+    } @else {
+      <div class="toolbar">
+        <div class="search">
+          <ion-icon name="search"></ion-icon>
+          <input
+            type="text"
+            [value]="query()"
+            (input)="onSearch($event)"
+            placeholder="Buscar cromo, jugador o país…"
+          />
+          @if (query()) {
+            <button class="clear" (click)="clearSearch()" aria-label="Limpiar">
+              <ion-icon name="close"></ion-icon>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="groups">
+        @for (g of grouped(); track g.countryCode || g.countryName) {
+          <div class="group">
+            <div class="group-header" (click)="openCountry(g.countryCode)">
+              @if (g.iso2) {
+                <img [src]="flag(g.iso2)" [alt]="g.countryName" class="group-flag" />
+              } @else {
+                <div class="group-flag placeholder">★</div>
+              }
+              <div class="group-info">
+                <div class="group-name">{{ g.countryName }}</div>
+                @if (g.countryCode) {
+                  <div class="group-code">{{ g.countryCode }}</div>
+                }
+              </div>
+              <div class="group-count">
+                <span class="num">{{ g.stickers.length }}</span>
+                <span class="lbl">faltan</span>
+              </div>
+              @if (g.countryCode) {
+                <ion-icon name="chevron-forward" class="chev"></ion-icon>
+              }
+            </div>
+
+            <div class="missing-list">
+              @for (s of g.stickers; track s.code) {
+                <div class="missing-row">
+                  <div class="num-badge" [class.foil]="s.foil">
+                    {{ s.numberInCountry ? '#' + s.numberInCountry : s.code }}
+                  </div>
+                  <div class="missing-info">
+                    <div class="missing-name">{{ s.displayName }}</div>
+                    <div class="missing-meta">
+                      <span class="code">{{ s.code }}</span>
+                      @if (s.foil) {
+                        <span class="foil-tag">FOIL</span>
+                      }
+                    </div>
+                  </div>
+                  <ion-icon [name]="iconFor(s.stickerType)" class="type-icon" [class.foil]="s.foil"></ion-icon>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</ion-content>

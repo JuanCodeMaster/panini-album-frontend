@@ -1,0 +1,356 @@
+.dup-content {
+  --background: var(--m-bg);
+  --padding-bottom: 120px;
+}
+
+.centered { display: flex; justify-content: center; padding: 48px 0; }
+
+.error-msg {
+  text-align: center;
+  margin: 24px 16px;
+  font-weight: 500;
+  color: var(--m-primary);
+  font-family: var(--font-body);
+}
+
+// ── Header ──
+.app-header {
+  padding: 14px 18px 10px;
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--m-muted);
+    padding: 4px 4px 4px 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-bottom: 6px;
+
+    ion-icon { font-size: 18px; }
+  }
+
+  .display-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 44px;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--m-ink);
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.32em;
+
+    .accent { color: var(--m-primary); }
+  }
+
+  .header-sub {
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--m-muted);
+  }
+}
+
+// ── Empty ──
+.empty-state {
+  text-align: center;
+  padding: 64px 16px;
+
+  .big {
+    font-size: 64px;
+    color: var(--m-muted);
+    opacity: 0.6;
+  }
+
+  h2 {
+    margin: 12px 0 4px;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    color: var(--m-ink);
+  }
+
+  p {
+    color: var(--m-muted);
+    font-family: var(--font-body);
+  }
+}
+
+// ── Stat card ──
+.stat-card {
+  position: relative;
+  margin: 8px 14px 0;
+  border-radius: 18px;
+  padding: 16px 18px;
+  color: #FFF;
+  background: linear-gradient(135deg, var(--m-primary) 0%, var(--m-accent) 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.5px) 0 0 / 12px 12px;
+}
+
+.hash-corner {
+  position: absolute;
+  top: -10px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  background: repeating-linear-gradient(45deg, var(--m-gold) 0 6px, transparent 6px 14px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.stat-side {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+
+  &.right { text-align: right; }
+
+  .big-num {
+    font-family: var(--font-display);
+    font-size: 38px;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+
+    &.gold { color: var(--m-gold); }
+  }
+
+  .kicker {
+    margin-top: 4px;
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+}
+
+// ── Toolbar ──
+.toolbar { padding: 14px 18px 4px; }
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  padding: 0 12px;
+  background: var(--m-surface);
+  border: 1px solid var(--m-hairline);
+  border-radius: 12px;
+
+  ion-icon {
+    font-size: 18px;
+    color: var(--m-muted);
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--m-ink);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+
+    &::placeholder { color: var(--m-muted); opacity: 0.7; }
+  }
+
+  .clear {
+    background: none;
+    border: none;
+    color: var(--m-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// ── Dup list ──
+.dup-list {
+  padding: 14px 14px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dup-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 10px 10px;
+  background: var(--m-surface);
+  border: 1px solid var(--m-hairline);
+  border-radius: 14px;
+
+  &.foil {
+    border-color: var(--m-gold);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.18);
+  }
+}
+
+.dup-photo {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--m-surface-2);
+  flex-shrink: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .foil-tag {
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    background: var(--m-gold);
+    color: #3A2A05;
+    font-family: var(--font-body);
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+}
+
+.dup-card.foil .dup-photo {
+  background: var(--m-foil);
+
+  img { mix-blend-mode: multiply; opacity: 0.9; }
+}
+
+.dup-info {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+
+  .dup-name {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--m-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dup-meta {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--m-muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+
+    .code {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--m-ink);
+      opacity: 0.7;
+    }
+
+    .dot { opacity: 0.5; }
+
+    .country {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+  }
+}
+
+// ── Qty pill ──
+.qty-pill {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background: var(--m-surface-2);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--m-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease;
+
+  ion-icon { font-size: 16px; }
+
+  &:active { background: var(--m-hairline); }
+
+  &.primary {
+    background: var(--m-gold);
+    color: #3A2A05;
+
+    &:active { background: var(--m-gold-deep); color: #FFF; }
+  }
+}
+
+.qty-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 4px;
+
+  .qty-num {
+    font-family: var(--font-display);
+    font-size: 16px;
+    line-height: 1;
+    color: var(--m-ink);
+  }
+
+  .qty-extras {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    color: var(--m-primary);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+}

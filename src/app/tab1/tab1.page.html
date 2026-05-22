@@ -1,0 +1,198 @@
+<ion-content [fullscreen]="true" class="home-content">
+  <!-- Hero rojo con halftone + hash stripes + progress ring -->
+  <div class="hero">
+    <div class="halftone"></div>
+    <div class="hash-stripes hash-corner"></div>
+
+    <div class="hero-top">
+      <div class="greeting">Hola, {{ firstName() }}</div>
+      <div class="actions">
+        <button class="icon-btn" (click)="go('/tabs/friends')" aria-label="Amigos">
+          <ion-icon name="notifications"></ion-icon>
+          @if (pendingFriends() > 0) {
+            <span class="dot"></span>
+          }
+        </button>
+        <button class="icon-btn" (click)="logout()" aria-label="Cerrar sesión">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    @if (summary(); as s) {
+      <div class="hero-body">
+        <app-progress-ring
+          [value]="pct()"
+          [size]="108"
+          [thickness]="9"
+          color="#D4AF37"
+          track="rgba(255,255,255,0.18)"
+          ink="#FFFFFF"
+          [label]="pctLabel()"
+          sub="Tu colección"
+        ></app-progress-ring>
+
+        <div class="hero-stats">
+          <div class="big-num">
+            {{ s.obtained }}<span class="sep">/{{ s.totalStickers }}</span>
+          </div>
+          <div class="kicker">Cromos</div>
+          <div class="countdown">
+            <span class="cd-num">{{ daysToWorldCup() }}</span>
+            <span class="cd-label">Días para el Mundial</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Quick counters -->
+  @if (summary(); as s) {
+    <div class="counters">
+      <button class="counter c-ok" (click)="go('/tabs/tab2')">
+        <div class="c-num">{{ s.obtained }}</div>
+        <div class="c-label">Obtenidos</div>
+      </button>
+      <button class="counter c-miss" (click)="go('/tabs/tab3/missing')">
+        <div class="c-num">{{ s.missing }}</div>
+        <div class="c-label">Faltantes</div>
+      </button>
+      <button class="counter c-dup" (click)="go('/tabs/tab3/duplicates')">
+        <div class="c-num">{{ s.duplicates }}</div>
+        <div class="c-label">Repetidas</div>
+      </button>
+    </div>
+  }
+
+  <!-- Bandeja de intercambios -->
+  @if (pendingProposals() > 0) {
+    <button class="proposals-alert" (click)="go('/trades')">
+      <ion-icon name="swap-horizontal" class="pa-icon"></ion-icon>
+      <div class="pa-text">
+        <div class="pa-title">{{ pendingProposals() }} propuesta(s) esperan tu respuesta</div>
+        <div class="pa-sub">Toca para ver y responder</div>
+      </div>
+      <ion-icon name="arrow-forward" class="pa-arrow"></ion-icon>
+    </button>
+  }
+
+  <!-- Últimas pegadas -->
+  @if (recent().length > 0) {
+    <div class="section-title">
+      <span>Recién pegadas</span>
+      <button class="action" (click)="go('/tabs/tab2')">Mi álbum →</button>
+    </div>
+    <div class="recent-strip">
+      @for (r of recent(); track r.us.stickerCode) {
+        <button class="recent-card" (click)="r.country && openCountry(r.country.code)">
+          <div class="rc-photo" [class.foil]="r.sticker?.foil">
+            @if (r.sticker?.imageUrl) {
+              <img [src]="r.sticker?.imageUrl" [alt]="r.sticker?.displayName" loading="lazy" />
+            } @else {
+              <ion-icon name="sparkles"></ion-icon>
+            }
+            @if (r.us.quantity > 1) {
+              <span class="rc-qty">×{{ r.us.quantity }}</span>
+            }
+          </div>
+          <div class="rc-info">
+            <div class="rc-name">{{ r.sticker?.displayName || r.us.stickerCode }}</div>
+            <div class="rc-meta">
+              @if (r.country) {
+                <span>{{ r.country.code }}</span>
+              }
+              <span class="rc-code">{{ r.us.stickerCode }}</span>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Intercambios sugeridos -->
+  @if (suggestions().length > 0) {
+    <div class="section-title">
+      <span>Intercambios sugeridos</span>
+      <button class="action" (click)="go('/tabs/friends')">Amigos →</button>
+    </div>
+    <div class="suggestions">
+      @for (s of suggestions(); track s.friend.username) {
+        <button class="sug-card" (click)="openTradeWith(s.friend.username)">
+          <div class="sug-top">
+            <div class="sug-avatar">{{ initials(s.friend.displayName, s.friend.username) }}</div>
+            <div class="sug-name">
+              <div class="sn-display">{{ s.friend.displayName || s.friend.username }}</div>
+              <div class="sn-handle">&#64;{{ s.friend.username }}</div>
+            </div>
+            <ion-icon name="swap-horizontal" class="sug-icon"></ion-icon>
+          </div>
+          <div class="sug-counts">
+            <div class="sc-side give">
+              <ion-icon name="arrow-up"></ion-icon>
+              <span class="sc-num">{{ s.giveCount }}</span>
+              <span class="sc-lbl">das</span>
+            </div>
+            <div class="sc-divider"></div>
+            <div class="sc-side receive">
+              <ion-icon name="arrow-down"></ion-icon>
+              <span class="sc-num">{{ s.receiveCount }}</span>
+              <span class="sc-lbl">recibes</span>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Casi listas -->
+  @if (almostDone().length > 0) {
+    <div class="section-title">
+      <span>Casi listas</span>
+      <button class="action" (click)="go('/tabs/tab2')">Ver todas →</button>
+    </div>
+
+    <div class="carousel">
+      @for (a of almostDone(); track a.country.code) {
+        <div class="almost-card" (click)="openCountry(a.country.code)">
+          <div class="flag-wrap">
+            <img [src]="flag(a.country.iso2)" [alt]="a.country.name" />
+            <span class="code-chip">{{ a.country.code }}</span>
+          </div>
+          <div class="ac-body">
+            <div class="ac-name">{{ a.country.name }}</div>
+            <div class="ac-progress">
+              <div class="bar"><div class="fill" [style.width.%]="(a.obtained / 20) * 100"></div></div>
+              <span class="mono">{{ a.obtained }}/20</span>
+            </div>
+            <div class="ac-remaining">Te faltan {{ a.remaining }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Amigos shortcut -->
+  <div class="section-title">
+    <span>Amigos e intercambios</span>
+  </div>
+  <button class="friends-card" (click)="go('/tabs/friends')">
+    <div class="fc-icon">
+      <ion-icon name="swap-horizontal"></ion-icon>
+    </div>
+    <div class="fc-text">
+      <div class="fc-title">
+        @if (pendingFriends() > 0) {
+          {{ pendingFriends() }} solicitud(es) pendiente(s)
+        } @else {
+          Encuentra intercambios
+        }
+      </div>
+      <div class="fc-sub">Ver amigos y matches sugeridos</div>
+    </div>
+    <ion-icon name="arrow-forward" class="fc-arrow"></ion-icon>
+  </button>
+
+  @if (loading()) {
+    <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+  }
+</ion-content>

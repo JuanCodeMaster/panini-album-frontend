@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Background: Mundial gradient (rojo a navy) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E30613"/>
+      <stop offset="100%" stop-color="#0A1A3D"/>
+    </linearGradient>
+    <linearGradient id="cup" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4D27A"/>
+      <stop offset="100%" stop-color="#B89730"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0.5" cy="0.2" r="0.6">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Fondo cuadrado con bordes redondeados (típico Android adaptive) -->
+  <rect x="0" y="0" width="1024" height="1024" rx="180" fill="url(#bg)"/>
+
+  <!-- Halftone dots overlay arriba -->
+  <g opacity="0.15">
+    <circle cx="120" cy="120" r="6" fill="#FFF"/>
+    <circle cx="220" cy="100" r="5" fill="#FFF"/>
+    <circle cx="320" cy="140" r="4" fill="#FFF"/>
+    <circle cx="420" cy="80" r="5" fill="#FFF"/>
+    <circle cx="520" cy="120" r="6" fill="#FFF"/>
+    <circle cx="620" cy="90" r="4" fill="#FFF"/>
+    <circle cx="720" cy="130" r="5" fill="#FFF"/>
+    <circle cx="820" cy="100" r="6" fill="#FFF"/>
+    <circle cx="180" cy="220" r="4" fill="#FFF"/>
+    <circle cx="280" cy="200" r="5" fill="#FFF"/>
+    <circle cx="380" cy="240" r="4" fill="#FFF"/>
+    <circle cx="680" cy="220" r="5" fill="#FFF"/>
+    <circle cx="780" cy="200" r="4" fill="#FFF"/>
+    <circle cx="880" cy="240" r="5" fill="#FFF"/>
+  </g>
+
+  <!-- Brillo radial superior -->
+  <rect x="0" y="0" width="1024" height="512" fill="url(#shine)"/>
+
+  <!-- Mundial Mark — copa centrada, escalada al canvas grande -->
+  <!-- El SVG original viene en viewBox 0 0 50 55; lo escalamos x18 -->
+  <g transform="translate(62, 60) scale(18)" stroke-linecap="round">
+    <!-- Copa principal (cuerpo) -->
+    <path d="M14 8 Q14 24, 25 28 Q36 24, 36 8 Z" fill="url(#cup)"/>
+    <!-- Borde superior -->
+    <path d="M14 8 L36 8 L34 4 L16 4 Z" fill="#D4AF37"/>
+    <!-- Tallo -->
+    <rect x="22" y="28" width="6" height="10" fill="url(#cup)"/>
+    <!-- Base 1 -->
+    <rect x="17" y="38" width="16" height="3.5" rx="1" fill="#FFFFFF"/>
+    <!-- Base 2 (dorada gruesa) -->
+    <rect x="14" y="41.5" width="22" height="5" rx="1.5" fill="#D4AF37"/>
+    <!-- Asas -->
+    <path d="M8 12 Q4 14, 4 18 Q4 22, 8 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
+    <path d="M42 12 Q46 14, 46 18 Q46 22, 42 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
+  </g>
+
+  <!-- Texto FIGURITAS / DEL MUNDIAL abajo (uppercase, geométrico) -->
+  <g text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="#FFFFFF">
+    <text x="512" y="850" font-size="92" letter-spacing="6">FIGURITAS</text>
+    <text x="512" y="940" font-size="58" fill="#D4AF37" letter-spacing="14">DEL&#160;MUNDIAL</text>
+  </g>
+</svg>

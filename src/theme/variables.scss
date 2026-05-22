@@ -1,0 +1,139 @@
+// ============================================================================
+// Figuritas del Mundial — Panini 2026
+// Sistema visual: Mundial Red (default) · Anton + Manrope + JetBrains Mono
+// ============================================================================
+
+// Tipografías
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  // ── Paleta Mundial Red (default, light) ──
+  --m-bg: #F6EFE0;
+  --m-surface: #FFFCF4;
+  --m-surface-2: #F0E6D0;
+  --m-ink: #161024;
+  --m-muted: #6A6678;
+  --m-primary: #E30613;        // Mundial red
+  --m-primary-ink: #FFFFFF;
+  --m-accent: #0A1A3D;         // Panini navy
+  --m-gold: #D4AF37;
+  --m-gold-deep: #9A7E27;
+  --m-success: #1FA84A;
+  --m-hairline: rgba(22, 16, 36, 0.10);
+  --m-hairline-2: rgba(22, 16, 36, 0.18);
+
+  // Foil gradient compartido
+  --m-foil: linear-gradient(135deg, #8a6520 0%, #D4AF37 35%, #fff3c4 50%, #D4AF37 65%, #8a6520 100%);
+
+  // Tipografía
+  --font-display: 'Anton', 'Bebas Neue', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  // ── Aliases retrocompat (pantallas viejas) ──
+  --panini-blue: var(--m-accent);
+  --panini-blue-shade: #07142e;
+  --panini-blue-tint: #233361;
+  --panini-gold: var(--m-gold);
+  --panini-gold-shade: var(--m-gold-deep);
+  --panini-gold-tint: #e0c560;
+  --panini-dark: var(--m-accent);
+  --panini-light: var(--m-surface);
+  --wc-red: var(--m-primary);
+  --wc-red-shade: #c2050f;
+  --wc-red-tint: #e92632;
+  --success-green: var(--m-success);
+  --warning-amber: #FFB020;
+
+  // ── Mapeo Ionic ──
+  --ion-font-family: var(--font-body);
+  --ion-background-color: var(--m-bg);
+  --ion-background-color-rgb: 246, 239, 224;
+  --ion-text-color: var(--m-ink);
+  --ion-text-color-rgb: 22, 16, 36;
+
+  --ion-color-primary: var(--m-primary);
+  --ion-color-primary-rgb: 227, 6, 19;
+  --ion-color-primary-contrast: var(--m-primary-ink);
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #c2050f;
+  --ion-color-primary-tint: #e92632;
+
+  --ion-color-secondary: var(--m-gold);
+  --ion-color-secondary-rgb: 212, 175, 55;
+  --ion-color-secondary-contrast: #3A2A05;
+  --ion-color-secondary-contrast-rgb: 58, 42, 5;
+  --ion-color-secondary-shade: var(--m-gold-deep);
+  --ion-color-secondary-tint: #e0c560;
+
+  --ion-color-tertiary: var(--m-accent);
+  --ion-color-tertiary-rgb: 10, 26, 61;
+  --ion-color-tertiary-contrast: #FFFFFF;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #07142e;
+  --ion-color-tertiary-tint: #233361;
+
+  --ion-color-success: var(--m-success);
+  --ion-color-success-rgb: 31, 168, 74;
+  --ion-color-success-contrast: #FFFFFF;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #1b9341;
+  --ion-color-success-tint: #35b15c;
+}
+
+// ── Dark mode (sistema) ──
+@media (prefers-color-scheme: dark) {
+  :root {
+    --m-bg: #0C0E14;
+    --m-surface: #171A24;
+    --m-surface-2: #1F2330;
+    --m-ink: #F4ECD8;
+    --m-muted: #9892A6;
+    --m-hairline: rgba(244, 236, 216, 0.10);
+    --m-hairline-2: rgba(244, 236, 216, 0.18);
+
+    --ion-background-color: var(--m-bg);
+    --ion-background-color-rgb: 12, 14, 20;
+    --ion-text-color: var(--m-ink);
+    --ion-text-color-rgb: 244, 236, 216;
+  }
+}
+
+// ── Helpers reutilizables ──
+.text-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.text-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+// Halftone dots overlay (úsalo en hero)
+.halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.5px) 0 0 / 12px 12px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+// Hash diagonal stripes (úsalo como decor corner)
+.hash-stripes {
+  position: absolute;
+  background: repeating-linear-gradient(45deg, var(--m-gold) 0 6px, transparent 6px 14px);
+  opacity: 0.22;
+  pointer-events: none;
+}

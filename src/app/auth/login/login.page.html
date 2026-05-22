@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <!-- Stadium hero -->
+  <div class="stadium-hero">
+    <div class="halftone"></div>
+    <div class="hash-stripes hash-corner-tr"></div>
+
+    <svg class="mundial-mark" width="48" height="53" viewBox="0 0 50 55" fill="none" aria-hidden="true">
+      <path d="M14 8 Q14 24, 25 28 Q36 24, 36 8 Z" fill="#D4AF37"/>
+      <path d="M14 8 L36 8 L34 4 L16 4 Z" fill="#D4AF37"/>
+      <rect x="22" y="28" width="6" height="10" fill="#D4AF37"/>
+      <rect x="17" y="38" width="16" height="3.5" rx="1" fill="#FFFFFF"/>
+      <rect x="14" y="41.5" width="22" height="5" rx="1.5" fill="#D4AF37"/>
+      <path d="M8 12 Q4 14, 4 18 Q4 22, 8 22" stroke="#D4AF37" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M42 12 Q46 14, 46 18 Q46 22, 42 22" stroke="#D4AF37" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <div class="brand">
+      <div>Figuritas</div>
+      <div class="gold">del&nbsp;Mundial</div>
+    </div>
+
+    <div class="tagline">USA · CANADÁ · MÉXICO · 2026</div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+    <h2 class="display-title">Iniciar sesión</h2>
+    <p class="muted">Tu álbum del Mundial. En el bolsillo.</p>
+
+    <div class="field">
+      <label>Usuario o email</label>
+      <input
+        type="text"
+        autocomplete="username"
+        formControlName="usernameOrEmail"
+        placeholder="tu_usuario o tu@email.com"
+      />
+    </div>
+
+    <div class="field">
+      <label>Contraseña</label>
+      <input
+        type="password"
+        autocomplete="current-password"
+        formControlName="password"
+        placeholder="••••••"
+      />
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error">{{ errorMessage() }}</div>
+    }
+
+    <button type="submit" class="primary-btn" [disabled]="form.invalid || loading()">
+      @if (loading()) {
+        <ion-spinner name="dots"></ion-spinner>
+      } @else {
+        Entrar
+        <ion-icon name="arrow-forward"></ion-icon>
+      }
+    </button>
+
+    <div class="link-row">
+      ¿No tienes cuenta? <a routerLink="/register">Regístrate</a>
+    </div>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon">
+          <ion-icon name="albums-outline"></ion-icon>
+        </div>
+        <div class="perk-label">Pega tus cromos</div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+        </div>
+        <div class="perk-label">Intercambia con amigos</div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">
+          <ion-icon name="trending-up-outline"></ion-icon>
+        </div>
+        <div class="perk-label">Sigue tu progreso</div>
+      </div>
+    </div>
+  </form>
+</ion-content>

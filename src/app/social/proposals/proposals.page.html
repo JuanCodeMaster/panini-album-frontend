@@ -1,0 +1,162 @@
+<ion-content [fullscreen]="true" class="prop-content">
+  <div class="app-header">
+    <button class="back-btn" (click)="back()" aria-label="Volver">
+      <ion-icon name="chevron-back"></ion-icon>
+      <span>Atrás</span>
+    </button>
+    <h1 class="display-title">
+      <span>Mis</span>
+      <span class="accent">intercambios</span>
+    </h1>
+    <div class="header-sub">Propuestas enviadas y recibidas</div>
+  </div>
+
+  <div class="tabs">
+    <button class="t-btn" [class.active]="tab() === 'incoming'" (click)="setTab('incoming')">
+      <span>Recibidas</span>
+      @if (incoming().length > 0) {
+        <span class="badge">{{ incoming().length }}</span>
+      }
+    </button>
+    <button class="t-btn" [class.active]="tab() === 'outgoing'" (click)="setTab('outgoing')">
+      <span>Enviadas</span>
+      @if (outgoing().length > 0) {
+        <span class="badge muted">{{ outgoing().length }}</span>
+      }
+    </button>
+    <button class="t-btn" [class.active]="tab() === 'history'" (click)="setTab('history')">
+      <span>Historial</span>
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    @if (list().length === 0) {
+      <div class="empty">
+        <ion-icon name="swap-horizontal" class="big"></ion-icon>
+        @if (tab() === 'incoming') {
+          <h2 class="text-display">Sin propuestas nuevas</h2>
+          <p>Cuando un amigo te proponga un intercambio aparecerá aquí.</p>
+        } @else if (tab() === 'outgoing') {
+          <h2 class="text-display">Sin enviadas pendientes</h2>
+          <p>Propón un intercambio desde el álbum de un amigo.</p>
+        } @else {
+          <h2 class="text-display">Historial vacío</h2>
+          <p>Los intercambios completados o rechazados aparecerán aquí.</p>
+        }
+      </div>
+    } @else {
+      <div class="prop-list">
+        @for (p of list(); track p.id) {
+          <div class="prop-card" [class.gift]="p.gift" [class.accepted]="p.status === 'ACCEPTED'" [class.rejected]="p.status === 'REJECTED' || p.status === 'CANCELLED'">
+            <div class="prop-head">
+              <div class="avatar" [class.gold]="p.gift">{{ initials(otherUser(p).displayName, otherUser(p).username) }}</div>
+              <div class="prop-meta">
+                <div class="name-row">
+                  <span class="name">{{ otherUser(p).displayName || otherUser(p).username }}</span>
+                  @if (p.gift) {
+                    <span class="kind-pill gift">
+                      <ion-icon name="gift"></ion-icon>
+                      Regalo
+                    </span>
+                  } @else {
+                    <span class="kind-pill trade">
+                      <ion-icon name="swap-horizontal"></ion-icon>
+                      Intercambio
+                    </span>
+                  }
+                </div>
+                <div class="handle">&#64;{{ otherUser(p).username }} · {{ statusLabel(p) }}</div>
+              </div>
+            </div>
+
+            @if (p.message) {
+              <div class="prop-msg">"{{ p.message }}"</div>
+            }
+
+            <div class="prop-sides">
+              @if (p.stickersGiven.length > 0) {
+                <div class="side">
+                  <div class="side-head">
+                    @if (tab() === 'outgoing') {
+                      <ion-icon name="arrow-up" class="give"></ion-icon>
+                      <span>Tú das</span>
+                    } @else {
+                      <ion-icon name="arrow-down" class="receive"></ion-icon>
+                      <span>{{ p.gift ? 'Te regala' : 'Te da' }}</span>
+                    }
+                    <span class="count">{{ p.stickersGiven.length }}</span>
+                  </div>
+                  <div class="stickers">
+                    @for (code of p.stickersGiven; track code) {
+                      <div class="mini" [class.foil]="isFoil(code)" [title]="stickerName(code)">
+                        @if (stickerImage(code); as img) {
+                          <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
+                        } @else {
+                          <span class="code-text">{{ code }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+              @if (p.stickersReceived.length > 0) {
+                <div class="side">
+                  <div class="side-head">
+                    @if (tab() === 'outgoing') {
+                      <ion-icon name="arrow-down" class="receive"></ion-icon>
+                      <span>Tú recibes</span>
+                    } @else {
+                      <ion-icon name="arrow-up" class="give"></ion-icon>
+                      <span>Le das</span>
+                    }
+                    <span class="count">{{ p.stickersReceived.length }}</span>
+                  </div>
+                  <div class="stickers">
+                    @for (code of p.stickersReceived; track code) {
+                      <div class="mini" [class.foil]="isFoil(code)" [title]="stickerName(code)">
+                        @if (stickerImage(code); as img) {
+                          <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
+                        } @else {
+                          <span class="code-text">{{ code }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (tab() === 'incoming' && p.status === 'PENDING') {
+              <div class="actions">
+                <button class="action-btn reject" (click)="reject(p.id)">
+                  <ion-icon name="close"></ion-icon>
+                  Rechazar
+                </button>
+                <button class="action-btn accept" (click)="accept(p.id)">
+                  <ion-icon name="checkmark"></ion-icon>
+                  {{ p.gift ? 'Aceptar regalo' : 'Aceptar' }}
+                </button>
+              </div>
+            }
+            @if (tab() === 'outgoing' && p.status === 'PENDING') {
+              <div class="actions">
+                <button class="action-btn reject" (click)="cancel(p.id)">
+                  <ion-icon name="trash"></ion-icon>
+                  Cancelar
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</ion-content>

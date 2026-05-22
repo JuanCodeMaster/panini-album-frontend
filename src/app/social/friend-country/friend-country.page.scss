@@ -1,0 +1,324 @@
+.fc-content {
+  --background: var(--m-bg);
+  --padding-bottom: 120px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.error-msg {
+  text-align: center;
+  margin: 24px 16px;
+  font-weight: 500;
+  color: var(--m-primary);
+  font-family: var(--font-body);
+}
+
+// ── Hero ──
+.hero {
+  position: relative;
+  padding: 16px 18px 24px;
+  color: #FFF;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  min-height: 220px;
+}
+
+.halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.5px) 0 0 / 12px 12px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.hash-corner {
+  position: absolute;
+  top: -10px;
+  right: -30px;
+  width: 140px;
+  height: 140px;
+  background: repeating-linear-gradient(45deg, var(--m-gold) 0 6px, transparent 6px 14px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.back-btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  border: none;
+  color: #FFF;
+  padding: 6px 14px 6px 8px;
+  border-radius: 99px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+
+  ion-icon { font-size: 18px; }
+}
+
+.hero-info {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+}
+
+.viewing {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 6px;
+
+  strong {
+    color: var(--m-gold);
+    font-weight: 700;
+  }
+}
+
+.kicker {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+
+  .grp {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    background: var(--m-gold);
+    color: #3A2A05;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.progress-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+
+  .bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    background: var(--m-gold);
+    transition: width 0.4s ease;
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+// ── Grid (read-only) ──
+.grid {
+  padding: 14px 14px 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 10px;
+}
+
+@media (min-width: 480px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.sticker {
+  position: relative;
+  user-select: none;
+  aspect-ratio: 0.74 / 1;
+
+  &.owned {
+    transform: rotate(-0.6deg);
+
+    &:nth-child(3n) { transform: rotate(0.7deg); }
+    &:nth-child(5n) { transform: rotate(-0.3deg); }
+    &:nth-child(7n) { transform: rotate(0.5deg); }
+  }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: #FFF;
+  padding: 4px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--m-surface-2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ph {
+    font-size: 40px;
+    color: rgba(0, 0, 0, 0.22);
+  }
+
+  .num-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--m-accent);
+    color: #FFF;
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  .foil-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: var(--m-gold);
+    color: #3A2A05;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 8.5px;
+    letter-spacing: 0.12em;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+}
+
+.sticker.foil .image {
+  background: var(--m-foil);
+
+  img { mix-blend-mode: multiply; opacity: 0.85; }
+  .num-badge { background: #3A2A05; color: #FFEFC2; }
+}
+
+.label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px 4px;
+  text-align: center;
+  gap: 2px;
+  min-height: 0;
+
+  .name {
+    font-family: var(--font-display);
+    font-size: 11px;
+    line-height: 1.05;
+    color: var(--m-accent);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+  }
+  .code {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    color: var(--m-accent);
+    opacity: 0.55;
+    letter-spacing: 0.04em;
+  }
+}
+
+.qty-bubble {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--m-gold);
+  color: #3A2A05;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  min-width: 30px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  z-index: 3;
+}
+
+// Slot vacío
+.empty-slot {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: var(--m-surface);
+  border: 1.5px dashed var(--m-hairline-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--m-muted);
+  gap: 4px;
+
+  .empty-num {
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height: 1;
+    opacity: 0.45;
+  }
+
+  .empty-label {
+    font-family: var(--font-body);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.55;
+  }
+}

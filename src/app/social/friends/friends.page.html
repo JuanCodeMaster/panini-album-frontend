@@ -1,0 +1,152 @@
+<ion-content [fullscreen]="true" class="friends-content">
+  <div class="app-header">
+    <h1 class="display-title">
+      <span>Mis</span>
+      <span class="accent">amigos</span>
+    </h1>
+    <div class="header-sub">Solicitudes · álbumes · intercambios</div>
+    <button class="trades-link" (click)="goTrades()">
+      <ion-icon name="swap-horizontal"></ion-icon>
+      <span>Mis intercambios</span>
+      @if (pendingProposals() > 0) {
+        <span class="trades-badge">{{ pendingProposals() }}</span>
+      }
+    </button>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search">
+      <ion-icon name="search"></ion-icon>
+      <input
+        type="text"
+        placeholder="Buscar usuario por nombre o email"
+        (input)="onSearchInput($event)"
+      />
+      @if (searching()) {
+        <ion-spinner name="dots" class="search-spinner"></ion-spinner>
+      }
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  <!-- Search Results -->
+  @if (searchResults().length > 0) {
+    <div class="section-title">
+      <span>Resultados</span>
+    </div>
+    <div class="user-list">
+      @for (u of searchResults(); track u.id) {
+        <div class="user-row">
+          <div class="avatar">{{ initials(u) }}</div>
+          <div class="user-info">
+            <div class="name">{{ u.displayName || u.username }}</div>
+            <div class="handle">&#64;{{ u.username }}</div>
+          </div>
+          @if (isPendingTo(u.username)) {
+            <div class="pending-chip">
+              <ion-icon name="hourglass"></ion-icon>
+              Pendiente
+            </div>
+          } @else {
+            <button class="add-btn" (click)="sendRequest(u.username)">
+              <ion-icon name="person-add"></ion-icon>
+              Agregar
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Incoming requests -->
+  @if (incoming().length > 0) {
+    <div class="section-title">
+      <span>Solicitudes recibidas</span>
+      <span class="count-badge">{{ incoming().length }}</span>
+    </div>
+    <div class="user-list">
+      @for (r of incoming(); track r.id) {
+        <div class="user-row request">
+          <div class="avatar accent">{{ initials(r.requester) }}</div>
+          <div class="user-info">
+            <div class="name">{{ r.requester.displayName || r.requester.username }}</div>
+            <div class="handle">&#64;{{ r.requester.username }}</div>
+          </div>
+          <button class="icon-btn success" (click)="accept(r.id)" aria-label="Aceptar">
+            <ion-icon name="checkmark"></ion-icon>
+          </button>
+          <button class="icon-btn ghost" (click)="reject(r.id)" aria-label="Rechazar">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Outgoing requests -->
+  @if (outgoing().length > 0) {
+    <div class="section-title">
+      <span>Solicitudes enviadas</span>
+    </div>
+    <div class="user-list">
+      @for (r of outgoing(); track r.id) {
+        <div class="user-row">
+          <div class="avatar">{{ initials(r.addressee) }}</div>
+          <div class="user-info">
+            <div class="name">{{ r.addressee.displayName || r.addressee.username }}</div>
+            <div class="handle muted">
+              <ion-icon name="hourglass"></ion-icon>
+              Esperando respuesta…
+            </div>
+          </div>
+          <button class="text-btn" (click)="cancelOutgoing(r.id)">Cancelar</button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- My friends -->
+  <div class="section-title">
+    <span>Mis amigos</span>
+    @if (friends().length > 0) {
+      <span class="count-badge gold">{{ friends().length }}</span>
+    }
+  </div>
+
+  @if (loading() && friends().length === 0) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  } @else if (friends().length === 0) {
+    <div class="empty-state">
+      <ion-icon name="person-circle-outline" class="big"></ion-icon>
+      <h2 class="text-display">Sin amigos aún</h2>
+      <p>Busca usuarios arriba para enviar tu primera solicitud.</p>
+    </div>
+  } @else {
+    <div class="friend-list">
+      @for (f of friends(); track f.id) {
+        <div class="friend-card">
+          <div class="friend-main" (click)="openAlbum(f.username)">
+            <div class="avatar gold">{{ initials(f) }}</div>
+            <div class="user-info">
+              <div class="name">{{ f.displayName || f.username }}</div>
+              <div class="handle">&#64;{{ f.username }} · Ver álbum</div>
+            </div>
+            <ion-icon name="chevron-forward" class="chev"></ion-icon>
+          </div>
+          <div class="friend-actions">
+            <button class="action-btn trade" (click)="openTrade(f.username)">
+              <ion-icon name="swap-horizontal"></ion-icon>
+              <span>Intercambios</span>
+            </button>
+            <button class="action-btn danger" (click)="unfriend(f.username)" aria-label="Eliminar amigo">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</ion-content>

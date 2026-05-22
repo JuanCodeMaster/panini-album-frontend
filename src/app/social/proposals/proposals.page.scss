@@ -1,0 +1,383 @@
+.prop-content {
+  --background: var(--m-bg);
+  --padding-bottom: 120px;
+}
+
+.centered { display: flex; justify-content: center; padding: 48px 0; }
+
+.error-msg {
+  margin: 12px 18px;
+  padding: 12px 14px;
+  background: rgba(227, 6, 19, 0.10);
+  border: 1px solid var(--m-primary);
+  border-radius: 12px;
+  color: var(--m-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+// ── Header ──
+.app-header {
+  padding: 14px 18px 10px;
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--m-muted);
+    padding: 4px 4px 4px 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-bottom: 6px;
+
+    ion-icon { font-size: 18px; }
+  }
+
+  .display-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 38px;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--m-ink);
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.32em;
+
+    .accent { color: var(--m-primary); }
+  }
+
+  .header-sub {
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--m-muted);
+  }
+}
+
+// ── Tabs ──
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 8px 14px 0;
+  margin-bottom: 4px;
+}
+
+.t-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  background: var(--m-surface);
+  border: 1px solid var(--m-hairline);
+  border-radius: 12px;
+  color: var(--m-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: var(--m-primary);
+    color: #FFF;
+    font-size: 10px;
+    font-weight: 800;
+
+    &.muted { background: var(--m-muted); }
+  }
+
+  &.active {
+    background: var(--m-accent);
+    color: #FFF;
+    border-color: var(--m-accent);
+  }
+}
+
+// ── Empty ──
+.empty {
+  text-align: center;
+  padding: 64px 16px;
+
+  .big {
+    font-size: 64px;
+    color: var(--m-muted);
+    opacity: 0.5;
+  }
+
+  h2 {
+    margin: 12px 0 4px;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: var(--m-ink);
+  }
+
+  p {
+    color: var(--m-muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+// ── Proposal cards ──
+.prop-list {
+  padding: 14px 14px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prop-card {
+  background: var(--m-surface);
+  border: 1px solid var(--m-hairline);
+  border-radius: 16px;
+  padding: 14px;
+
+  &.gift { border-color: var(--m-gold); background: rgba(212, 175, 55, 0.06); }
+  &.accepted { border-color: var(--m-success); }
+  &.rejected { opacity: 0.7; }
+}
+
+.prop-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--m-accent), #1a2a57);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  flex-shrink: 0;
+
+  &.gold {
+    background: linear-gradient(135deg, var(--m-gold), var(--m-gold-deep));
+    color: #3A2A05;
+  }
+}
+
+.prop-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--m-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kind-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 99px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 12px; }
+
+  &.gift {
+    background: var(--m-gold);
+    color: #3A2A05;
+  }
+
+  &.trade {
+    background: var(--m-accent);
+    color: #FFF;
+  }
+}
+
+.handle {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--m-muted);
+  letter-spacing: 0.04em;
+}
+
+.prop-msg {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--m-surface-2);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--m-ink);
+}
+
+// ── Sides (give / receive) ──
+.prop-sides {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side {
+  background: var(--m-surface-2);
+  border-radius: 10px;
+  padding: 8px 10px 10px;
+}
+
+.side-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+
+  ion-icon {
+    font-size: 14px;
+
+    &.give { color: var(--m-primary); }
+    &.receive { color: var(--m-success); }
+  }
+
+  span:first-of-type {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--m-muted);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--m-ink);
+  }
+}
+
+.stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mini {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--m-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .code-text {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--m-muted);
+    text-align: center;
+    padding: 0 2px;
+  }
+
+  &.foil {
+    background: var(--m-foil);
+
+    img { mix-blend-mode: multiply; opacity: 0.9; }
+  }
+}
+
+// ── Actions ──
+.actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  ion-icon { font-size: 16px; }
+
+  &.accept {
+    background: var(--m-success);
+    color: #FFF;
+
+    &:active { background: #1b9341; }
+  }
+
+  &.reject {
+    background: var(--m-surface-2);
+    color: var(--m-muted);
+    border: 1px solid var(--m-hairline);
+
+    &:active { background: var(--m-hairline); }
+  }
+}

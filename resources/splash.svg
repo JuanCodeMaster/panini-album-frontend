@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E30613"/>
+      <stop offset="100%" stop-color="#0A1A3D"/>
+    </linearGradient>
+    <linearGradient id="cup" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4D27A"/>
+      <stop offset="100%" stop-color="#B89730"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="2732" height="2732" fill="url(#bg)"/>
+
+  <!-- Halftone dots -->
+  <g opacity="0.10">
+    <circle cx="200" cy="200" r="10" fill="#FFF"/>
+    <circle cx="500" cy="180" r="8" fill="#FFF"/>
+    <circle cx="800" cy="220" r="9" fill="#FFF"/>
+    <circle cx="1200" cy="160" r="10" fill="#FFF"/>
+    <circle cx="1600" cy="200" r="8" fill="#FFF"/>
+    <circle cx="2000" cy="180" r="9" fill="#FFF"/>
+    <circle cx="2400" cy="220" r="10" fill="#FFF"/>
+    <circle cx="300" cy="400" r="9" fill="#FFF"/>
+    <circle cx="700" cy="380" r="8" fill="#FFF"/>
+    <circle cx="1100" cy="420" r="10" fill="#FFF"/>
+    <circle cx="1500" cy="400" r="9" fill="#FFF"/>
+    <circle cx="1900" cy="380" r="8" fill="#FFF"/>
+    <circle cx="2300" cy="420" r="10" fill="#FFF"/>
+  </g>
+
+  <!-- Hash stripes corner -->
+  <g opacity="0.20" transform="translate(2400, 0)">
+    <rect x="0" y="0" width="40" height="600" transform="rotate(45 200 0)" fill="#D4AF37"/>
+    <rect x="80" y="0" width="40" height="600" transform="rotate(45 280 0)" fill="#D4AF37"/>
+    <rect x="160" y="0" width="40" height="600" transform="rotate(45 360 0)" fill="#D4AF37"/>
+    <rect x="240" y="0" width="40" height="600" transform="rotate(45 440 0)" fill="#D4AF37"/>
+  </g>
+
+  <!-- Mundial Mark centrada (scale 36) -->
+  <g transform="translate(466, 800) scale(36)" stroke-linecap="round">
+    <path d="M14 8 Q14 24, 25 28 Q36 24, 36 8 Z" fill="url(#cup)"/>
+    <path d="M14 8 L36 8 L34 4 L16 4 Z" fill="#D4AF37"/>
+    <rect x="22" y="28" width="6" height="10" fill="url(#cup)"/>
+    <rect x="17" y="38" width="16" height="3.5" rx="1" fill="#FFFFFF"/>
+    <rect x="14" y="41.5" width="22" height="5" rx="1.5" fill="#D4AF37"/>
+    <path d="M8 12 Q4 14, 4 18 Q4 22, 8 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
+    <path d="M42 12 Q46 14, 46 18 Q46 22, 42 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
+  </g>
+
+  <g text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="#FFFFFF">
+    <text x="1366" y="2300" font-size="220" letter-spacing="14">FIGURITAS</text>
+    <text x="1366" y="2500" font-size="140" fill="#D4AF37" letter-spacing="32">DEL MUNDIAL</text>
+    <text x="1366" y="2640" font-size="56" font-weight="700" letter-spacing="40" opacity="0.9">USA · CANADA · MEXICO · 2026</text>
+  </g>
+</svg>

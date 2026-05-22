@@ -1,0 +1,164 @@
+<ion-content [fullscreen]="true" class="fa-content">
+  @if (loading()) {
+    <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage() && summary(); as s) {
+    <div class="app-header">
+      <button class="back-btn" (click)="back()" aria-label="Volver">
+        <ion-icon name="chevron-back"></ion-icon>
+        <span>Atrás</span>
+      </button>
+      <h1 class="display-title">
+        <span>Álbum de</span>
+        <span class="accent">&#64;{{ username() }}</span>
+      </h1>
+      <div class="header-sub">Solo lectura · vista del amigo</div>
+    </div>
+
+    <div class="friend-hero">
+      <div class="halftone"></div>
+      <div class="hash-stripes hash-corner"></div>
+      <div class="avatar">{{ initials(username()) }}</div>
+      <app-progress-ring
+        [value]="pct()"
+        [size]="86"
+        [thickness]="8"
+        color="#D4AF37"
+        track="rgba(255,255,255,0.18)"
+        ink="#FFFFFF"
+        [label]="pctLabel()"
+        sub="Colección"
+      ></app-progress-ring>
+      <div class="hero-stats">
+        <div class="big-num">{{ s.obtained }}<span class="sep">/{{ s.totalStickers }}</span></div>
+        <div class="kicker">Cromos del amigo</div>
+        <div class="dup-line">
+          <strong>{{ s.duplicates }}</strong> repetidos · <strong>{{ s.missing }}</strong> faltantes
+        </div>
+      </div>
+    </div>
+
+    <!-- Big trade CTAs -->
+    <div class="trade-ctas">
+      <button class="trade-cta trade" (click)="openTrade()">
+        <div class="cta-icon">
+          <ion-icon name="swap-horizontal"></ion-icon>
+        </div>
+        <div class="cta-text">
+          <div class="cta-title">Proponer intercambio</div>
+          <div class="cta-sub">Selecciona qué dar y recibir</div>
+        </div>
+        <ion-icon name="arrow-forward" class="cta-arrow"></ion-icon>
+      </button>
+      <button class="trade-cta gift" (click)="openTrade()">
+        <div class="cta-icon">
+          <ion-icon name="gift"></ion-icon>
+        </div>
+        <div class="cta-text">
+          <div class="cta-title">Regalar un cromo</div>
+          <div class="cta-sub">Sin pedir nada a cambio</div>
+        </div>
+        <ion-icon name="arrow-forward" class="cta-arrow"></ion-icon>
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <ion-icon name="search"></ion-icon>
+        <input
+          type="text"
+          [value]="query()"
+          (input)="onSearch($event)"
+          placeholder="Buscar país o jugador (ej. Messi)…"
+        />
+        @if (query()) {
+          <button class="clear" (click)="clearSearch()" aria-label="Limpiar">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        }
+      </div>
+
+      <div class="filters">
+        <button class="chip" [class.active]="filter() === 'all'" (click)="setFilter('all')">Todas</button>
+        <button class="chip" [class.active]="filter() === 'almost'" (click)="setFilter('almost')">Casi listas</button>
+        <button class="chip" [class.active]="filter() === 'empty'" (click)="setFilter('empty')">Vacías</button>
+      </div>
+    </div>
+
+    <div class="rows">
+      @for (c of filtered(); track c.code) {
+        <div class="row-wrap" [class.expanded]="isExpanded(c.code)">
+          <button class="row" (click)="toggleExpand(c.code)">
+            <span class="thumb">
+              <img [src]="flag(c.iso2)" [alt]="c.name" loading="lazy" />
+            </span>
+            <span class="info">
+              <span class="info-top">
+                <span class="group-chip">{{ c.code }}</span>
+                <span class="name">{{ c.name }}</span>
+                @if (isComplete(c.code)) {
+                  <span class="badge gold">✓</span>
+                }
+              </span>
+              <span class="info-bottom">
+                <span class="bar">
+                  <span
+                    class="fill"
+                    [class.gold]="isComplete(c.code)"
+                    [class.muted]="isEmpty(c.code)"
+                    [style.width.%]="(obtained(c.code) / 20) * 100"
+                  ></span>
+                </span>
+                <span class="mono">{{ obtained(c.code) }}/20</span>
+              </span>
+            </span>
+            <ion-icon name="chevron-down" class="chev"></ion-icon>
+          </button>
+
+          @if (isExpanded(c.code)) {
+            <div class="inline-grid">
+              @if (stickersFor(c.code).length === 0) {
+                <div class="loading"><ion-spinner name="dots"></ion-spinner></div>
+              } @else {
+                <div class="slot-grid">
+                  @for (st of stickersFor(c.code); track st.code) {
+                    <div class="slot-wrap" [class.match]="matchesQuery(st)">
+                      <div
+                        class="slot"
+                        [class.owned]="isOwned(st.code)"
+                        [class.foil]="st.foil"
+                      >
+                        @if (isOwned(st.code)) {
+                          <img [src]="flag(c.iso2)" alt="" class="bg" />
+                        }
+                        <span class="slot-num">{{ st.numberInCountry }}</span>
+                        @if (st.foil) {
+                          <span class="foil-tag">F</span>
+                        }
+                        @if (qtyOf(st.code) > 1) {
+                          <span class="dup-tag">×{{ qtyOf(st.code) }}</span>
+                        }
+                      </div>
+                      <div class="slot-name" [class.muted]="!isOwned(st.code)">
+                        {{ st.displayName }}
+                      </div>
+                    </div>
+                  }
+                </div>
+                <button class="view-all" (click)="openCountry(c.code)">
+                  Ver todas
+                  <ion-icon name="arrow-forward"></ion-icon>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</ion-content>

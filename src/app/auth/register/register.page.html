@@ -1,0 +1,154 @@
+<ion-content [fullscreen]="true" class="register-content">
+  <div class="stadium-hero">
+    <div class="halftone"></div>
+    <div class="hash-stripes hash-corner-tr"></div>
+
+    <button class="back-btn" (click)="back()" aria-label="Volver">
+      <ion-icon name="chevron-back"></ion-icon>
+      <span>Iniciar sesión</span>
+    </button>
+
+    <svg class="mundial-mark" width="42" height="46" viewBox="0 0 50 55" fill="none" aria-hidden="true">
+      <path d="M14 8 Q14 24, 25 28 Q36 24, 36 8 Z" fill="#D4AF37"/>
+      <path d="M14 8 L36 8 L34 4 L16 4 Z" fill="#D4AF37"/>
+      <rect x="22" y="28" width="6" height="10" fill="#D4AF37"/>
+      <rect x="17" y="38" width="16" height="3.5" rx="1" fill="#FFFFFF"/>
+      <rect x="14" y="41.5" width="22" height="5" rx="1.5" fill="#D4AF37"/>
+      <path d="M8 12 Q4 14, 4 18 Q4 22, 8 22" stroke="#D4AF37" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M42 12 Q46 14, 46 18 Q46 22, 42 22" stroke="#D4AF37" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <div class="brand">
+      <div>Únete al</div>
+      <div class="gold">Mundial&nbsp;2026</div>
+    </div>
+
+    <div class="tagline">Empieza tu álbum en segundos</div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
+    <h2 class="display-title">Crear cuenta</h2>
+    <p class="muted">Pega cromos · intercambia · sigue tu progreso</p>
+
+    <div class="field" [class.error]="hasError('username', 'required') || hasError('username', 'minlength')">
+      <div class="field-icon"><ion-icon name="person-outline"></ion-icon></div>
+      <div class="field-body">
+        <label>Usuario *</label>
+        <input
+          type="text"
+          autocomplete="username"
+          formControlName="username"
+          placeholder="tu_usuario"
+        />
+      </div>
+    </div>
+    @if (hasError('username', 'minlength')) {
+      <div class="field-error">El usuario debe tener al menos 3 caracteres</div>
+    }
+
+    <div class="field" [class.error]="hasError('email', 'required') || hasError('email', 'email')">
+      <div class="field-icon"><ion-icon name="mail-outline"></ion-icon></div>
+      <div class="field-body">
+        <label>Email *</label>
+        <input
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          placeholder="tu@email.com"
+        />
+      </div>
+    </div>
+    @if (hasError('email', 'email')) {
+      <div class="field-error">Ingresa un email válido</div>
+    }
+
+    <div class="field optional">
+      <div class="field-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
+      <div class="field-body">
+        <label>Nombre para mostrar</label>
+        <input
+          type="text"
+          formControlName="displayName"
+          placeholder="Opcional · tu nombre real"
+        />
+      </div>
+    </div>
+
+    <div class="field" [class.error]="hasError('password', 'required') || hasError('password', 'minlength')">
+      <div class="field-icon"><ion-icon name="lock-closed-outline"></ion-icon></div>
+      <div class="field-body">
+        <label>Contraseña *</label>
+        <input
+          type="password"
+          autocomplete="new-password"
+          formControlName="password"
+          placeholder="Mínimo 6 caracteres"
+        />
+      </div>
+    </div>
+    @if (hasError('password', 'minlength')) {
+      <div class="field-error">La contraseña debe tener al menos 6 caracteres</div>
+    }
+
+    <!-- Términos y condiciones -->
+    <div class="terms-row" [class.error]="hasError('acceptTerms', 'required')">
+      <button type="button" class="terms-check" [class.checked]="form.value.acceptTerms" (click)="toggleTerms()" aria-label="Aceptar términos">
+        @if (form.value.acceptTerms) {
+          <ion-icon name="checkmark"></ion-icon>
+        }
+      </button>
+      <div class="terms-text">
+        Acepto los
+        <a routerLink="/terms" target="_blank">términos y condiciones</a>
+        y la política de privacidad.
+      </div>
+    </div>
+    @if (hasError('acceptTerms', 'required')) {
+      <div class="field-error">Debes aceptar los términos para continuar</div>
+    }
+
+    @if (errorMessage()) {
+      <div class="banner-error">
+        <ion-icon name="alert-circle"></ion-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <button type="submit" class="primary-btn" [disabled]="form.invalid || loading()">
+      @if (loading()) {
+        <ion-spinner name="dots"></ion-spinner>
+      } @else {
+        Crear mi álbum
+        <ion-icon name="arrow-forward"></ion-icon>
+      }
+    </button>
+
+    <div class="link-row">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    </div>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon"><ion-icon name="albums-outline"></ion-icon></div>
+        <div class="perk-text">
+          <div class="pk-title">980 cromos</div>
+          <div class="pk-sub">48 selecciones del Mundial</div>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon"><ion-icon name="swap-horizontal-outline"></ion-icon></div>
+        <div class="perk-text">
+          <div class="pk-title">Intercambia y regala</div>
+          <div class="pk-sub">Con tus amigos</div>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon"><ion-icon name="trending-up-outline"></ion-icon></div>
+        <div class="perk-text">
+          <div class="pk-title">Sigue tu progreso</div>
+          <div class="pk-sub">Stats y matching automático</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ion-content>

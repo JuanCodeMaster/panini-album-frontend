@@ -1,0 +1,51 @@
+<ion-content [fullscreen]="true" class="onboarding-content">
+  <div class="onboarding-shell">
+    <header class="top-bar">
+      <span class="brand">
+        <ion-icon name="trophy-outline" aria-hidden="true"></ion-icon>
+        FIGURITAS DEL MUNDIAL
+      </span>
+      <button class="skip-btn" type="button" (click)="skip()" *ngIf="!isLast()">Saltar</button>
+    </header>
+
+    <section class="slide" [attr.data-step]="index()">
+      <span class="badge">{{ current().badge }}</span>
+
+      <div class="icon-wrap">
+        <ion-icon [name]="current().icon" aria-hidden="true"></ion-icon>
+      </div>
+
+      <h1 class="title">
+        {{ current().title }}
+        <span class="title-accent">{{ current().highlight }}</span>
+      </h1>
+
+      <p class="body">{{ current().body }}</p>
+
+      <p class="hint">{{ current().hint }}</p>
+    </section>
+
+    <footer class="bottom">
+      <div class="dots">
+        <button
+          type="button"
+          class="dot"
+          *ngFor="let s of slides; let i = index"
+          [class.active]="i === index()"
+          (click)="go(i)"
+          [attr.aria-label]="'Ir al paso ' + (i + 1)"
+        ></button>
+      </div>
+
+      <div class="actions">
+        <button class="ghost-btn" type="button" (click)="prev()" [disabled]="index() === 0">
+          Atrás
+        </button>
+        <button class="primary-btn" type="button" (click)="next()">
+          {{ isLast() ? 'Empezar a pegar' : 'Siguiente' }}
+          <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+    </footer>
+  </div>
+</ion-content>

@@ -1,0 +1,103 @@
+<ion-content [fullscreen]="true" class="dup-content">
+  <div class="app-header">
+    <button class="back-btn" (click)="back()" aria-label="Volver">
+      <ion-icon name="chevron-back"></ion-icon>
+      <span>Atrás</span>
+    </button>
+    <h1 class="display-title">
+      <span>Tus</span>
+      <span class="accent">repetidas</span>
+    </h1>
+    <div class="header-sub">
+      @if (!loading()) {
+        para intercambiar con amigos
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="centered"><ion-spinner name="dots"></ion-spinner></div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    @if (items().length === 0) {
+      <div class="empty-state">
+        <ion-icon name="layers" class="big"></ion-icon>
+        <h2 class="text-display">Sin repetidas</h2>
+        <p>Todo lo que tienes es único. Sigue abriendo sobres.</p>
+      </div>
+    } @else {
+      <!-- Stat card -->
+      <div class="stat-card">
+        <div class="halftone"></div>
+        <div class="hash-corner"></div>
+        <div class="stat-side">
+          <div class="big-num">{{ totalExtras() }}</div>
+          <div class="kicker">Cromos extra</div>
+        </div>
+        <div class="stat-side right">
+          <div class="big-num gold">{{ items().length }}</div>
+          <div class="kicker">Únicos con repetidas</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search">
+          <ion-icon name="search"></ion-icon>
+          <input
+            type="text"
+            [value]="query()"
+            (input)="onSearch($event)"
+            placeholder="Buscar cromo, jugador o país…"
+          />
+          @if (query()) {
+            <button class="clear" (click)="clearSearch()" aria-label="Limpiar">
+              <ion-icon name="close"></ion-icon>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="dup-list">
+        @for (it of filtered(); track it.us.stickerCode) {
+          <div class="dup-card" [class.foil]="isFoil(it)">
+            <div class="dup-photo" (click)="openCountry(it.us.countryCode)">
+              @if (imageUrl(it); as img) {
+                <img [src]="img" [alt]="displayName(it)" loading="lazy" />
+              } @else if (flag(it.us.countryCode)) {
+                <img [src]="flag(it.us.countryCode)" alt="" />
+              }
+              @if (isFoil(it)) {
+                <span class="foil-tag">FOIL</span>
+              }
+            </div>
+            <div class="dup-info" (click)="openCountry(it.us.countryCode)">
+              <div class="dup-name">{{ displayName(it) }}</div>
+              <div class="dup-meta">
+                <span class="code">{{ it.us.stickerCode }}</span>
+                <span class="dot">·</span>
+                <span class="country">{{ countryName(it.us.countryCode) }}</span>
+              </div>
+            </div>
+            <div class="qty-pill">
+              <button class="qty-btn" (click)="decrement(it.us.stickerCode)" aria-label="Restar">
+                <ion-icon name="remove"></ion-icon>
+              </button>
+              <div class="qty-value">
+                <span class="qty-num">{{ it.us.quantity }}</span>
+                <span class="qty-extras">+{{ extras(it) }}</span>
+              </div>
+              <button class="qty-btn primary" (click)="increment(it.us.stickerCode)" aria-label="Sumar">
+                <ion-icon name="add"></ion-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</ion-content>
