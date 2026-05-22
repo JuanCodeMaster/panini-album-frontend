@@ -40,7 +40,12 @@
           [class.foil]="s.foil"
           [class.team-photo]="s.stickerType === 'TEAM_PHOTO'"
           [class.badge]="s.stickerType === 'BADGE'"
-          (click)="toggle(s.code)"
+          [class.pressing]="pressedCode() === s.code"
+          (pointerdown)="onPressStart(s.code, $event)"
+          (pointerup)="onPressEnd(s.code, $event)"
+          (pointerleave)="onPressCancel()"
+          (pointercancel)="onPressCancel()"
+          (contextmenu)="$event.preventDefault()"
         >
           @if (isObtained(s.code)) {
             <div class="card">

@@ -86,9 +86,56 @@ export class CountryDetailPage implements OnInit {
     this.location.back();
   }
 
-  toggle(stickerCode: string): void {
-    // Tap siempre añade: primera vez lo pega, siguientes veces suma una repetida.
+  // ── Tap vs long-press ──
+  // Tap = sumar (1ª vez la pega, después suma repetida)
+  // Long-press 500ms = restar una sin necesidad de entrar al detalle
+  private pressTimer: ReturnType<typeof setTimeout> | null = null;
+  private didLongPress = false;
+  readonly pressedCode = signal<string | null>(null);
+  private static readonly LONG_PRESS_MS = 500;
+
+  onPressStart(stickerCode: string, event: Event): void {
+    // Ignorar si el target es uno de los botones +/- (tienen su propio handler)
+    const t = event.target as HTMLElement;
+    if (t.closest('.dup-controls')) return;
+    this.didLongPress = false;
+    this.pressedCode.set(stickerCode);
+    this.pressTimer = setTimeout(() => {
+      this.didLongPress = true;
+      this.pressedCode.set(null);
+      this.album.decrement(stickerCode).subscribe();
+      this.haptic();
+    }, CountryDetailPage.LONG_PRESS_MS);
+  }
+
+  onPressEnd(stickerCode: string, event: Event): void {
+    const t = event.target as HTMLElement;
+    if (t.closest('.dup-controls')) return;
+    this.clearTimer();
+    if (this.didLongPress) {
+      this.didLongPress = false;
+      return; // ya restamos
+    }
+    this.pressedCode.set(null);
     this.album.increment(stickerCode).subscribe();
+  }
+
+  onPressCancel(): void {
+    this.clearTimer();
+    this.pressedCode.set(null);
+  }
+
+  private clearTimer(): void {
+    if (this.pressTimer) {
+      clearTimeout(this.pressTimer);
+      this.pressTimer = null;
+    }
+  }
+
+  private haptic(): void {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(35); } catch {}
+    }
   }
 
   increment(stickerCode: string, event: Event): void {
