@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- DEV: permite tráfico HTTP en cleartext para alcanzar localhost / LAN
+         desde el WebView de Capacitor. En producción cambia esto por HTTPS
+         (`cleartextTrafficPermitted="false"`) o restringe a un dominio. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
