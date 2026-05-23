@@ -41,6 +41,15 @@ npx cap open android
 npx cap open ios
 ```
 
+### Aviso si sincronizas iOS desde Windows
+
+`npx cap sync ios` en Windows genera `ios/App/CapApp-SPM/Package.swift`
+con paths estilo `..\..\..\node_modules\...` (con backslashes) y Xcode
+no los entiende. Si haces sync desde Windows tenés que reemplazar los `\`
+por `/` en ese archivo antes de pasarlo al Mac.
+
+En Mac no pasa: ahí se generan con `/` y funciona directo.
+
 ### Pasos completos en un Mac para iOS (cuando consigas uno)
 
 El proyecto iOS ya está sincronizado en `ios/App/` con icono Mundial Mark,

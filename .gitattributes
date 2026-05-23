@@ -1,0 +1,15 @@
+# Forzar LF en archivos que Xcode / herramientas Unix necesitan
+# (evita que git autocrlf en Windows rompa el build cuando se clona en Mac).
+*.swift           text eol=lf
+*.pbxproj         text eol=lf
+*.xcconfig        text eol=lf
+*.plist           text eol=lf
+*.sh              text eol=lf
+*.command         text eol=lf
+*.podspec         text eol=lf
+*.modulemap       text eol=lf
+Podfile           text eol=lf
+Podfile.lock      text eol=lf
+
+# Resto de archivos: ajuste automático
+*                 text=auto
