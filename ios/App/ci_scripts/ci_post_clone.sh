@@ -48,13 +48,15 @@ npx ng build --configuration=production
 echo "==> Capacitor sync iOS"
 npx cap sync ios
 
-echo "==> Resolviendo dependencias SPM (genera Package.resolved)"
+echo "==> Resolviendo dependencias SPM (refresh del Package.resolved ya commiteado)"
 cd "$CI_PRIMARY_REPOSITORY_PATH/ios/App"
+# Non-fatal: si Xcode Cloud rechaza -resolvePackageDependencies, el
+# Package.resolved commiteado en el repo basta para que Archive funcione.
 xcodebuild -resolvePackageDependencies \
   -project App.xcodeproj \
   -scheme App \
   -clonedSourcePackagesDirPath "$CI_PRIMARY_REPOSITORY_PATH/SourcePackages" \
-  || xcodebuild -resolvePackageDependencies -project App.xcodeproj
+  2>&1 | sed 's/^/    /' || echo "    (resolve falló, se usa Package.resolved commiteado)"
 
 echo "==> Verificando Package.resolved"
 ls -la "$CI_PRIMARY_REPOSITORY_PATH/ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/" || true
