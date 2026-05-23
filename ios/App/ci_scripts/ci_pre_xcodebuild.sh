@@ -39,4 +39,12 @@ npx ng build --configuration=production
 echo "==> Capacitor sync iOS"
 npx cap sync ios
 
+echo "==> Resolviendo dependencias SPM"
+cd "$CI_PRIMARY_REPOSITORY_PATH/ios/App"
+xcodebuild -resolvePackageDependencies \
+  -project App.xcodeproj \
+  -scheme App \
+  -clonedSourcePackagesDirPath "$CI_PRIMARY_REPOSITORY_PATH/SourcePackages" \
+  || xcodebuild -resolvePackageDependencies -project App.xcodeproj
+
 echo "==> ci_pre_xcodebuild.sh DONE"
