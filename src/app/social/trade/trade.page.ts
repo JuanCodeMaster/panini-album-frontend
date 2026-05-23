@@ -128,6 +128,8 @@ export class TradePage implements OnInit {
   }
 
   isCollapsed(side: 'give' | 'receive', countryCode: string | null): boolean {
+    // Si hay búsqueda activa, fuerza a mostrar resultados — no escondas matches.
+    if (this.searchQuery().trim()) return false;
     return this.collapsedGroups().has(`${side}:${countryCode ?? '__SPECIAL__'}`);
   }
 
@@ -169,6 +171,16 @@ export class TradePage implements OnInit {
       next: ({ countries, match }) => {
         this.countriesMap.set(new Map(countries.map((c) => [c.code, c])));
         this.match.set(match);
+        // Por defecto todos los grupos vienen colapsados — es mucha info
+        // y el usuario los expande sólo los que le interesan.
+        const initial = new Set<string>();
+        for (const s of match.youGive ?? []) {
+          initial.add(`give:${s.countryCode ?? '__SPECIAL__'}`);
+        }
+        for (const s of match.youReceive ?? []) {
+          initial.add(`receive:${s.countryCode ?? '__SPECIAL__'}`);
+        }
+        this.collapsedGroups.set(initial);
         this.loading.set(false);
       },
       error: (err) => {
