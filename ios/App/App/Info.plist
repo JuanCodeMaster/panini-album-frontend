@@ -47,6 +47,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<!-- Export compliance: la app sólo usa HTTPS estándar de iOS (JWT
+	     sobre TLS) y no implementa criptografía propia. Esto la exime
+	     de los requisitos de documentación de exportación (EAR 5D002).
+	     Apple acepta esta declaración y no vuelve a preguntar en cada
+	     subida. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<!-- DEV: permite HTTP cleartext a localhost y red LAN para alcanzar el
 	     backend Spring Boot durante desarrollo. En producción quítalo y
 	     usa HTTPS. -->
