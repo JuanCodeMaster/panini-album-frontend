@@ -1,12 +1,12 @@
 #!/bin/sh
-# Xcode Cloud — ci_post_clone (ubicación: raíz del repo)
-# Corre justo después del clone, antes de resolver SPM y compilar.
-# Instala Node, npm deps y sincroniza el bundle web a iOS.
+# Xcode Cloud — ci_post_clone (ubicación: ios/App/ci_scripts/)
+# Duplicado del script de la raíz del repo para asegurar que Xcode Cloud lo
+# encuentre sea cual sea la ubicación que use para buscar ci_scripts/.
 
 set -e
 
 echo "=========================================="
-echo "==> ci_post_clone.sh starting (repo root)"
+echo "==> ci_post_clone.sh starting (ios/App/ci_scripts/)"
 echo "=========================================="
 echo "CI_PRIMARY_REPOSITORY_PATH = ${CI_PRIMARY_REPOSITORY_PATH:-NOT_SET}"
 echo "CI_WORKSPACE              = ${CI_WORKSPACE:-NOT_SET}"
