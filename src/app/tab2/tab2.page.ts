@@ -26,7 +26,6 @@ import { CatalogService } from '../core/services/catalog.service';
 import { AlbumService } from '../core/services/album.service';
 import { Country, Sticker, flagUrl } from '../core/models/catalog.model';
 
-type FilterMode = 'all' | 'group' | 'almost' | 'empty';
 type SortMode = 'album' | 'group' | 'abc' | 'missing';
 
 @Component({
@@ -43,19 +42,9 @@ export class Tab2Page implements OnInit {
   readonly loading = signal(true);
   readonly countries = signal<Country[]>([]);
   readonly query = signal('');
-  readonly filter = signal<FilterMode>('all');
   readonly sort = signal<SortMode>('album');
-  readonly selectedGroup = signal<string | null>(null);
   readonly expandedCodes = signal<Set<string>>(new Set());
   readonly allStickersByCountry = signal<Record<string, Sticker[]>>({});
-
-  readonly availableGroups = computed<string[]>(() => {
-    const set = new Set<string>();
-    for (const c of this.countries()) {
-      if (c.wcGroup) set.add(c.wcGroup);
-    }
-    return Array.from(set).sort();
-  });
 
   readonly progressMap = computed<Map<string, number>>(() => {
     const m = new Map<string, number>();
@@ -84,8 +73,6 @@ export class Tab2Page implements OnInit {
 
   readonly filtered = computed<Country[]>(() => {
     const q = this.query().toLowerCase();
-    const f = this.filter();
-    const grp = this.selectedGroup();
     const pm = this.progressMap();
     const playerMatches = this.matchedByPlayer();
     let arr = this.countries();
@@ -97,11 +84,6 @@ export class Tab2Page implements OnInit {
           playerMatches.has(c.code)
       );
     }
-    if (grp) arr = arr.filter((c) => c.wcGroup === grp);
-    if (f === 'almost') {
-      arr = arr.filter((c) => (pm.get(c.code) ?? 0) >= 14 && (pm.get(c.code) ?? 0) < 20);
-    }
-    if (f === 'empty') arr = arr.filter((c) => (pm.get(c.code) ?? 0) === 0);
 
     // Sort según el modo elegido (copia para no mutar el array de countries)
     const sorted = [...arr];
@@ -132,10 +114,6 @@ export class Tab2Page implements OnInit {
     }
     return sorted;
   });
-
-  toggleGroup(g: string): void {
-    this.selectedGroup.set(this.selectedGroup() === g ? null : g);
-  }
 
   constructor() {
     addIcons({
@@ -204,10 +182,6 @@ export class Tab2Page implements OnInit {
 
   clearSearch(): void {
     this.query.set('');
-  }
-
-  setFilter(f: FilterMode): void {
-    this.filter.set(f);
   }
 
   obtained(code: string): number {

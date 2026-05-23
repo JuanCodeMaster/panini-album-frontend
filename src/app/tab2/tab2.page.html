@@ -35,12 +35,6 @@
       }
     </div>
 
-    <div class="filters">
-      <button class="chip" [class.active]="filter() === 'all'" (click)="setFilter('all')">Todas</button>
-      <button class="chip" [class.active]="filter() === 'almost'" (click)="setFilter('almost')">Casi listas</button>
-      <button class="chip" [class.active]="filter() === 'empty'" (click)="setFilter('empty')">Vacías</button>
-    </div>
-
     <div class="sort-row">
       <ion-icon name="swap-vertical" class="sort-ic"></ion-icon>
       <span class="sort-label">Ordenar</span>
@@ -64,16 +58,6 @@
       </div>
     </div>
 
-    <div class="group-filters">
-      <span class="gf-label">Grupo</span>
-      @for (g of availableGroups(); track g) {
-        <button
-          class="g-chip"
-          [class.active]="selectedGroup() === g"
-          (click)="toggleGroup(g)"
-        >{{ g }}</button>
-      }
-    </div>
   </div>
 
   @if (loading()) {
