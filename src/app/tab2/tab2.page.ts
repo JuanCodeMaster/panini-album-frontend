@@ -8,12 +8,26 @@ import {
   IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronDown, search, arrowForward, close, person, image, sparkles } from 'ionicons/icons';
+import {
+  chevronDown,
+  search,
+  arrowForward,
+  close,
+  person,
+  image,
+  sparkles,
+  swapVertical,
+  trophyOutline,
+  textOutline,
+  alertCircleOutline,
+  appsOutline,
+} from 'ionicons/icons';
 import { CatalogService } from '../core/services/catalog.service';
 import { AlbumService } from '../core/services/album.service';
 import { Country, Sticker, flagUrl } from '../core/models/catalog.model';
 
 type FilterMode = 'all' | 'group' | 'almost' | 'empty';
+type SortMode = 'album' | 'group' | 'abc' | 'missing';
 
 @Component({
   selector: 'app-tab2',
@@ -30,6 +44,7 @@ export class Tab2Page implements OnInit {
   readonly countries = signal<Country[]>([]);
   readonly query = signal('');
   readonly filter = signal<FilterMode>('all');
+  readonly sort = signal<SortMode>('album');
   readonly selectedGroup = signal<string | null>(null);
   readonly expandedCodes = signal<Set<string>>(new Set());
   readonly allStickersByCountry = signal<Record<string, Sticker[]>>({});
@@ -87,7 +102,35 @@ export class Tab2Page implements OnInit {
       arr = arr.filter((c) => (pm.get(c.code) ?? 0) >= 14 && (pm.get(c.code) ?? 0) < 20);
     }
     if (f === 'empty') arr = arr.filter((c) => (pm.get(c.code) ?? 0) === 0);
-    return arr;
+
+    // Sort según el modo elegido (copia para no mutar el array de countries)
+    const sorted = [...arr];
+    switch (this.sort()) {
+      case 'group':
+        sorted.sort((a, b) => {
+          const ga = a.wcGroup ?? 'Z';
+          const gb = b.wcGroup ?? 'Z';
+          if (ga !== gb) return ga.localeCompare(gb);
+          return (a.displayOrder ?? 0) - (b.displayOrder ?? 0);
+        });
+        break;
+      case 'abc':
+        sorted.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+        break;
+      case 'missing':
+        // Más faltantes arriba, completados al final
+        sorted.sort((a, b) => {
+          const ma = 20 - (pm.get(a.code) ?? 0);
+          const mb = 20 - (pm.get(b.code) ?? 0);
+          if (ma !== mb) return mb - ma;
+          return a.name.localeCompare(b.name, 'es');
+        });
+        break;
+      case 'album':
+      default:
+        sorted.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+    }
+    return sorted;
   });
 
   toggleGroup(g: string): void {
@@ -95,7 +138,24 @@ export class Tab2Page implements OnInit {
   }
 
   constructor() {
-    addIcons({ chevronDown, search, arrowForward, close, person, image, sparkles });
+    addIcons({
+      chevronDown,
+      search,
+      arrowForward,
+      close,
+      person,
+      image,
+      sparkles,
+      swapVertical,
+      trophyOutline,
+      textOutline,
+      alertCircleOutline,
+      appsOutline,
+    });
+  }
+
+  setSort(s: SortMode): void {
+    this.sort.set(s);
   }
 
   ngOnInit(): void {

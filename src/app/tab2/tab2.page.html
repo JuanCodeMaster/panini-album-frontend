@@ -41,6 +41,29 @@
       <button class="chip" [class.active]="filter() === 'empty'" (click)="setFilter('empty')">Vacías</button>
     </div>
 
+    <div class="sort-row">
+      <ion-icon name="swap-vertical" class="sort-ic"></ion-icon>
+      <span class="sort-label">Ordenar</span>
+      <div class="sort-chips">
+        <button class="s-chip" [class.active]="sort() === 'album'" (click)="setSort('album')">
+          <ion-icon name="apps-outline"></ion-icon>
+          <span>Álbum</span>
+        </button>
+        <button class="s-chip" [class.active]="sort() === 'group'" (click)="setSort('group')">
+          <ion-icon name="trophy-outline"></ion-icon>
+          <span>Grupo</span>
+        </button>
+        <button class="s-chip" [class.active]="sort() === 'abc'" (click)="setSort('abc')">
+          <ion-icon name="text-outline"></ion-icon>
+          <span>A–Z</span>
+        </button>
+        <button class="s-chip" [class.active]="sort() === 'missing'" (click)="setSort('missing')">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>Faltantes</span>
+        </button>
+      </div>
+    </div>
+
     <div class="group-filters">
       <span class="gf-label">Grupo</span>
       @for (g of availableGroups(); track g) {
