@@ -21,6 +21,10 @@ import {
   imageOutline,
   personOutline,
   alertCircle,
+  chevronDown,
+  chevronUp,
+  search,
+  close,
 } from 'ionicons/icons';
 import { SocialService } from '../../core/services/social.service';
 import { CatalogService } from '../../core/services/catalog.service';
@@ -62,8 +66,22 @@ export class TradePage implements OnInit {
     return this.selectedGive().size > 0 && this.selectedReceive().size > 0;
   });
 
-  readonly groupedGive = computed<StickerGroup[]>(() => this.group(this.match()?.youGive ?? []));
-  readonly groupedReceive = computed<StickerGroup[]>(() => this.group(this.match()?.youReceive ?? []));
+  readonly searchQuery = signal('');
+  readonly collapsedGroups = signal<Set<string>>(new Set());
+
+  readonly groupedGive = computed<StickerGroup[]>(() =>
+    this.applyFilter(this.group(this.match()?.youGive ?? []))
+  );
+  readonly groupedReceive = computed<StickerGroup[]>(() =>
+    this.applyFilter(this.group(this.match()?.youReceive ?? []))
+  );
+
+  readonly totalGiveMatches = computed(() =>
+    this.groupedGive().reduce((acc, g) => acc + g.stickers.length, 0)
+  );
+  readonly totalReceiveMatches = computed(() =>
+    this.groupedReceive().reduce((acc, g) => acc + g.stickers.length, 0)
+  );
 
   constructor() {
     addIcons({
@@ -79,7 +97,67 @@ export class TradePage implements OnInit {
       imageOutline,
       personOutline,
       alertCircle,
+      chevronDown,
+      chevronUp,
+      search,
+      close,
     });
+  }
+
+  private applyFilter(groups: StickerGroup[]): StickerGroup[] {
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) return groups;
+    return groups
+      .map((g) => ({
+        ...g,
+        stickers: g.stickers.filter((s) =>
+          s.displayName.toLowerCase().includes(q) ||
+          s.code.toLowerCase().includes(q) ||
+          g.countryName.toLowerCase().includes(q)
+        ),
+      }))
+      .filter((g) => g.stickers.length > 0);
+  }
+
+  onSearch(e: Event): void {
+    this.searchQuery.set((e.target as HTMLInputElement).value);
+  }
+
+  clearSearch(): void {
+    this.searchQuery.set('');
+  }
+
+  isCollapsed(side: 'give' | 'receive', countryCode: string | null): boolean {
+    return this.collapsedGroups().has(`${side}:${countryCode ?? '__SPECIAL__'}`);
+  }
+
+  toggleCollapse(side: 'give' | 'receive', countryCode: string | null): void {
+    const key = `${side}:${countryCode ?? '__SPECIAL__'}`;
+    const s = new Set(this.collapsedGroups());
+    if (s.has(key)) s.delete(key);
+    else s.add(key);
+    this.collapsedGroups.set(s);
+  }
+
+  collapseAll(side: 'give' | 'receive'): void {
+    const groups = side === 'give' ? this.groupedGive() : this.groupedReceive();
+    const s = new Set(this.collapsedGroups());
+    for (const g of groups) s.add(`${side}:${g.countryCode ?? '__SPECIAL__'}`);
+    this.collapsedGroups.set(s);
+  }
+
+  expandAll(side: 'give' | 'receive'): void {
+    const s = new Set(this.collapsedGroups());
+    for (const k of Array.from(s)) {
+      if (k.startsWith(`${side}:`)) s.delete(k);
+    }
+    this.collapsedGroups.set(s);
+  }
+
+  allCollapsed(side: 'give' | 'receive'): boolean {
+    const groups = side === 'give' ? this.groupedGive() : this.groupedReceive();
+    if (groups.length === 0) return false;
+    return groups.every((g) => this.isCollapsed(side, g.countryCode));
   }
 
   ngOnInit(): void {

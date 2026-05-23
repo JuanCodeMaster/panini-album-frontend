@@ -42,8 +42,8 @@
           [class.badge]="s.stickerType === 'BADGE'"
           [class.pressing]="pressedCode() === s.code"
           (pointerdown)="onPressStart(s.code, $event)"
+          (pointermove)="onPressMove($event)"
           (pointerup)="onPressEnd(s.code, $event)"
-          (pointerleave)="onPressCancel()"
           (pointercancel)="onPressCancel()"
           (contextmenu)="$event.preventDefault()"
         >

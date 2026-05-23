@@ -88,27 +88,43 @@ export class CountryDetailPage implements OnInit {
 
   // ── Tap vs long-press ──
   // Tap = sumar (1ª vez la pega, después suma repetida)
-  // Long-press 500ms = restar una sin necesidad de entrar al detalle
+  // Long-press 500ms = restar una (sólo si tienes ≥1) sin entrar al detalle
   private pressTimer: ReturnType<typeof setTimeout> | null = null;
   private didLongPress = false;
+  private pressStartX = 0;
+  private pressStartY = 0;
   readonly pressedCode = signal<string | null>(null);
   private static readonly LONG_PRESS_MS = 500;
+  private static readonly MOVE_TOLERANCE_PX = 14;
 
-  onPressStart(stickerCode: string, event: Event): void {
-    // Ignorar si el target es uno de los botones +/- (tienen su propio handler)
+  onPressStart(stickerCode: string, event: PointerEvent): void {
     const t = event.target as HTMLElement;
     if (t.closest('.dup-controls')) return;
     this.didLongPress = false;
+    this.pressStartX = event.clientX;
+    this.pressStartY = event.clientY;
     this.pressedCode.set(stickerCode);
     this.pressTimer = setTimeout(() => {
       this.didLongPress = true;
       this.pressedCode.set(null);
-      this.album.decrement(stickerCode).subscribe();
-      this.haptic();
+      if (this.qty(stickerCode) > 0) {
+        this.album.decrement(stickerCode).subscribe();
+        this.haptic();
+      }
     }, CountryDetailPage.LONG_PRESS_MS);
   }
 
-  onPressEnd(stickerCode: string, event: Event): void {
+  onPressMove(event: PointerEvent): void {
+    if (this.pressTimer === null) return;
+    const dx = event.clientX - this.pressStartX;
+    const dy = event.clientY - this.pressStartY;
+    if (Math.hypot(dx, dy) > CountryDetailPage.MOVE_TOLERANCE_PX) {
+      this.clearTimer();
+      this.pressedCode.set(null);
+    }
+  }
+
+  onPressEnd(stickerCode: string, event: PointerEvent): void {
     const t = event.target as HTMLElement;
     if (t.closest('.dup-controls')) return;
     this.clearTimer();

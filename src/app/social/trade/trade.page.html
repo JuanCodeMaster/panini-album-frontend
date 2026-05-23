@@ -51,6 +51,22 @@
       </div>
     </div>
 
+    <!-- Search bar global -->
+    <div class="search-bar">
+      <ion-icon name="search" class="search-ic"></ion-icon>
+      <input
+        type="text"
+        placeholder="Buscar por jugador, código o país…"
+        [value]="searchQuery()"
+        (input)="onSearch($event)"
+      />
+      @if (searchQuery()) {
+        <button class="clear-btn" (click)="clearSearch()" aria-label="Limpiar">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      }
+    </div>
+
     <div class="section">
       <div class="section-head">
         <div class="head-left">
@@ -61,11 +77,19 @@
             <div class="head-title">Tú das</div>
             <div class="head-sub">
               {{ selectedGive().size }} / {{ m.youGive.length }} seleccionados
+              @if (searchQuery() && totalGiveMatches() !== m.youGive.length) {
+                · {{ totalGiveMatches() }} en filtro
+              }
             </div>
           </div>
         </div>
         @if (m.youGive.length > 0) {
-          <button class="text-action" (click)="selectAllGive()">Todos</button>
+          <div class="head-actions">
+            <button class="text-action" (click)="allCollapsed('give') ? expandAll('give') : collapseAll('give')">
+              {{ allCollapsed('give') ? 'Expandir' : 'Colapsar' }}
+            </button>
+            <button class="text-action" (click)="selectAllGive()">Todos</button>
+          </div>
         }
       </div>
 
@@ -74,44 +98,51 @@
           <p>No tienes repetidas que {{ m.friend.displayName || m.friend.username }} necesite</p>
           <p class="hint">Vuelve cuando consigas más cromos</p>
         </div>
+      } @else if (groupedGive().length === 0) {
+        <div class="empty">
+          <p>No hay resultados para «{{ searchQuery() }}»</p>
+        </div>
       } @else {
         @for (g of groupedGive(); track g.countryCode || g.countryName) {
-          <div class="group">
-            <div class="group-head">
+          <div class="group" [class.collapsed]="isCollapsed('give', g.countryCode)">
+            <button class="group-head" (click)="toggleCollapse('give', g.countryCode)" type="button">
               @if (g.iso2) {
                 <img [src]="flag(g.iso2)" [alt]="g.countryName" />
               }
               <span class="g-name">{{ g.countryName }}</span>
               <span class="g-count">{{ g.stickers.length }}</span>
-            </div>
-            <div class="picker-grid">
-              @for (s of g.stickers; track s.code) {
-                <button
-                  class="pick"
-                  [class.selected]="isGiveSelected(s.code)"
-                  [class.foil]="s.foil"
-                  (click)="toggleGive(s.code)"
-                >
-                  <div class="pick-photo">
-                    @if (s.imageUrl) {
-                      <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
-                    } @else {
-                      <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
-                    }
-                    @if (isGiveSelected(s.code)) {
-                      <div class="check"><ion-icon name="checkmark"></ion-icon></div>
-                    }
-                    @if (s.foil) {
-                      <span class="foil-tag">F</span>
-                    }
-                  </div>
-                  <div class="pick-info">
-                    <div class="pick-name">{{ s.displayName }}</div>
-                    <div class="pick-code">{{ s.code }}</div>
-                  </div>
-                </button>
-              }
-            </div>
+              <ion-icon class="g-chev" [name]="isCollapsed('give', g.countryCode) ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </button>
+            @if (!isCollapsed('give', g.countryCode)) {
+              <div class="picker-grid">
+                @for (s of g.stickers; track s.code) {
+                  <button
+                    class="pick"
+                    [class.selected]="isGiveSelected(s.code)"
+                    [class.foil]="s.foil"
+                    (click)="toggleGive(s.code)"
+                  >
+                    <div class="pick-photo">
+                      @if (s.imageUrl) {
+                        <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                      } @else {
+                        <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
+                      }
+                      @if (isGiveSelected(s.code)) {
+                        <div class="check"><ion-icon name="checkmark"></ion-icon></div>
+                      }
+                      @if (s.foil) {
+                        <span class="foil-tag">F</span>
+                      }
+                    </div>
+                    <div class="pick-info">
+                      <div class="pick-name">{{ s.displayName }}</div>
+                      <div class="pick-code">{{ s.code }}</div>
+                    </div>
+                  </button>
+                }
+              </div>
+            }
           </div>
         }
       }
@@ -128,11 +159,19 @@
               <div class="head-title">Tú recibes</div>
               <div class="head-sub">
                 {{ selectedReceive().size }} / {{ m.youReceive.length }} seleccionados
+                @if (searchQuery() && totalReceiveMatches() !== m.youReceive.length) {
+                  · {{ totalReceiveMatches() }} en filtro
+                }
               </div>
             </div>
           </div>
           @if (m.youReceive.length > 0) {
-            <button class="text-action" (click)="selectAllReceive()">Todos</button>
+            <div class="head-actions">
+              <button class="text-action" (click)="allCollapsed('receive') ? expandAll('receive') : collapseAll('receive')">
+                {{ allCollapsed('receive') ? 'Expandir' : 'Colapsar' }}
+              </button>
+              <button class="text-action" (click)="selectAllReceive()">Todos</button>
+            </div>
           }
         </div>
 
@@ -141,44 +180,51 @@
             <p>{{ m.friend.displayName || m.friend.username }} no tiene repetidas que necesites</p>
             <p class="hint">Quizá quieras enviarle un regalo</p>
           </div>
+        } @else if (groupedReceive().length === 0) {
+          <div class="empty">
+            <p>No hay resultados para «{{ searchQuery() }}»</p>
+          </div>
         } @else {
           @for (g of groupedReceive(); track g.countryCode || g.countryName) {
-            <div class="group">
-              <div class="group-head">
+            <div class="group" [class.collapsed]="isCollapsed('receive', g.countryCode)">
+              <button class="group-head" (click)="toggleCollapse('receive', g.countryCode)" type="button">
                 @if (g.iso2) {
                   <img [src]="flag(g.iso2)" [alt]="g.countryName" />
                 }
                 <span class="g-name">{{ g.countryName }}</span>
                 <span class="g-count">{{ g.stickers.length }}</span>
-              </div>
-              <div class="picker-grid">
-                @for (s of g.stickers; track s.code) {
-                  <button
-                    class="pick receive"
-                    [class.selected]="isReceiveSelected(s.code)"
-                    [class.foil]="s.foil"
-                    (click)="toggleReceive(s.code)"
-                  >
-                    <div class="pick-photo">
-                      @if (s.imageUrl) {
-                        <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
-                      } @else {
-                        <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
-                      }
-                      @if (isReceiveSelected(s.code)) {
-                        <div class="check"><ion-icon name="checkmark"></ion-icon></div>
-                      }
-                      @if (s.foil) {
-                        <span class="foil-tag">F</span>
-                      }
-                    </div>
-                    <div class="pick-info">
-                      <div class="pick-name">{{ s.displayName }}</div>
-                      <div class="pick-code">{{ s.code }}</div>
-                    </div>
-                  </button>
-                }
-              </div>
+                <ion-icon class="g-chev" [name]="isCollapsed('receive', g.countryCode) ? 'chevron-down' : 'chevron-up'"></ion-icon>
+              </button>
+              @if (!isCollapsed('receive', g.countryCode)) {
+                <div class="picker-grid">
+                  @for (s of g.stickers; track s.code) {
+                    <button
+                      class="pick receive"
+                      [class.selected]="isReceiveSelected(s.code)"
+                      [class.foil]="s.foil"
+                      (click)="toggleReceive(s.code)"
+                    >
+                      <div class="pick-photo">
+                        @if (s.imageUrl) {
+                          <img [src]="s.imageUrl" [alt]="s.displayName" loading="lazy" />
+                        } @else {
+                          <ion-icon [name]="iconFor(s.stickerType)"></ion-icon>
+                        }
+                        @if (isReceiveSelected(s.code)) {
+                          <div class="check"><ion-icon name="checkmark"></ion-icon></div>
+                        }
+                        @if (s.foil) {
+                          <span class="foil-tag">F</span>
+                        }
+                      </div>
+                      <div class="pick-info">
+                        <div class="pick-name">{{ s.displayName }}</div>
+                        <div class="pick-code">{{ s.code }}</div>
+                      </div>
+                    </button>
+                  }
+                </div>
+              }
             </div>
           }
         }
