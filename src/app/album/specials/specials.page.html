@@ -33,11 +33,16 @@
 
         <div class="special-grid">
           @for (s of g.stickers; track s.code) {
-            <button
+            <div
               class="special-card"
               [class.owned]="isObtained(s.code)"
               [class.foil]="s.foil"
-              (click)="toggle(s.code)"
+              [class.pressing]="pressedCode() === s.code"
+              (pointerdown)="onPressStart(s.code, $event)"
+              (pointermove)="onPressMove($event)"
+              (pointerup)="onPressEnd(s.code, $event)"
+              (pointercancel)="onPressCancel()"
+              (contextmenu)="$event.preventDefault()"
             >
               <div class="sc-photo">
                 @if (s.imageUrl) {
@@ -66,7 +71,18 @@
                   <div class="sc-meta">{{ countryName(s.countryCode) }}</div>
                 }
               </div>
-            </button>
+
+              @if (isObtained(s.code)) {
+                <div class="sc-controls" (click)="$event.stopPropagation()">
+                  <button (click)="decrement(s.code, $event)" aria-label="Restar">
+                    <ion-icon name="remove"></ion-icon>
+                  </button>
+                  <button class="primary" (click)="increment(s.code, $event)" aria-label="Sumar">
+                    <ion-icon name="add"></ion-icon>
+                  </button>
+                </div>
+              }
+            </div>
           }
         </div>
       </div>

@@ -13,6 +13,8 @@ import {
   people,
   star,
   checkmark,
+  add,
+  remove,
 } from 'ionicons/icons';
 import { CatalogService } from '../../core/services/catalog.service';
 import { AlbumService } from '../../core/services/album.service';
@@ -65,6 +67,15 @@ export class SpecialsPage implements OnInit {
     ];
   });
 
+  // Long-press para restar (igual que country-detail)
+  private pressTimer: ReturnType<typeof setTimeout> | null = null;
+  private didLongPress = false;
+  private pressStartX = 0;
+  private pressStartY = 0;
+  readonly pressedCode = signal<string | null>(null);
+  private static readonly LONG_PRESS_MS = 500;
+  private static readonly MOVE_TOLERANCE_PX = 14;
+
   constructor() {
     addIcons({
       chevronBack,
@@ -76,7 +87,76 @@ export class SpecialsPage implements OnInit {
       people,
       star,
       checkmark,
+      add,
+      remove,
     });
+  }
+
+  onPressStart(stickerCode: string, event: PointerEvent): void {
+    const t = event.target as HTMLElement;
+    if (t.closest('.sc-controls')) return;
+    this.didLongPress = false;
+    this.pressStartX = event.clientX;
+    this.pressStartY = event.clientY;
+    this.pressedCode.set(stickerCode);
+    this.pressTimer = setTimeout(() => {
+      this.didLongPress = true;
+      this.pressedCode.set(null);
+      if (this.qty(stickerCode) > 0) {
+        this.album.decrement(stickerCode).subscribe();
+        this.haptic();
+      }
+    }, SpecialsPage.LONG_PRESS_MS);
+  }
+
+  onPressMove(event: PointerEvent): void {
+    if (this.pressTimer === null) return;
+    const dx = event.clientX - this.pressStartX;
+    const dy = event.clientY - this.pressStartY;
+    if (Math.hypot(dx, dy) > SpecialsPage.MOVE_TOLERANCE_PX) {
+      this.clearTimer();
+      this.pressedCode.set(null);
+    }
+  }
+
+  onPressEnd(stickerCode: string, event: PointerEvent): void {
+    const t = event.target as HTMLElement;
+    if (t.closest('.sc-controls')) return;
+    this.clearTimer();
+    if (this.didLongPress) {
+      this.didLongPress = false;
+      return;
+    }
+    this.pressedCode.set(null);
+    this.album.increment(stickerCode).subscribe();
+  }
+
+  onPressCancel(): void {
+    this.clearTimer();
+    this.pressedCode.set(null);
+  }
+
+  private clearTimer(): void {
+    if (this.pressTimer) {
+      clearTimeout(this.pressTimer);
+      this.pressTimer = null;
+    }
+  }
+
+  private haptic(): void {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(35); } catch {}
+    }
+  }
+
+  increment(stickerCode: string, event: Event): void {
+    event.stopPropagation();
+    this.album.increment(stickerCode).subscribe();
+  }
+
+  decrement(stickerCode: string, event: Event): void {
+    event.stopPropagation();
+    this.album.decrement(stickerCode).subscribe();
   }
 
   ngOnInit(): void {
@@ -115,10 +195,6 @@ export class SpecialsPage implements OnInit {
 
   isObtained(stickerCode: string): boolean {
     return this.qty(stickerCode) > 0;
-  }
-
-  toggle(stickerCode: string): void {
-    this.album.increment(stickerCode).subscribe();
   }
 
   back(): void {
