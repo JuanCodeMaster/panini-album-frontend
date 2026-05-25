@@ -300,44 +300,92 @@
   }
 }
 
-.stickers {
+.trade-items {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.mini {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  background: var(--m-surface);
+.trade-item {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: var(--m-surface);
+  box-shadow: inset 0 0 0 1px var(--m-hairline);
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .ti-photo {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--m-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .code-text {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--m-muted);
+      text-align: center;
+      padding: 0 2px;
+    }
   }
 
-  .code-text {
-    font-family: var(--font-mono);
-    font-size: 8px;
+  .ti-info { flex: 1; min-width: 0; }
+
+  .ti-name {
+    font-family: var(--font-body);
+    font-size: 13px;
     font-weight: 700;
+    color: var(--m-ink);
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ti-country {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
     color: var(--m-muted);
-    text-align: center;
-    padding: 0 2px;
+
+    .ti-flag {
+      width: 16px;
+      height: 11px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px var(--m-hairline);
+      flex-shrink: 0;
+    }
+  }
+
+  .ti-foil {
+    flex-shrink: 0;
+    background: var(--m-foil);
+    color: #3A2A05;
+    font-family: var(--font-body);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    padding: 2px 5px;
+    border-radius: 3px;
   }
 
   &.foil {
-    background: var(--m-foil);
-
-    img { mix-blend-mode: multiply; opacity: 0.9; }
+    box-shadow: inset 0 0 0 1.5px var(--m-gold);
   }
 }
 

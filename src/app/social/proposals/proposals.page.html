@@ -94,13 +94,29 @@
                     }
                     <span class="count">{{ p.stickersGiven.length }}</span>
                   </div>
-                  <div class="stickers">
+                  <div class="trade-items">
                     @for (code of p.stickersGiven; track code) {
-                      <div class="mini" [class.foil]="isFoil(code)" [title]="stickerName(code)">
-                        @if (stickerImage(code); as img) {
-                          <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
-                        } @else {
-                          <span class="code-text">{{ code }}</span>
+                      <div class="trade-item" [class.foil]="isFoil(code)">
+                        <div class="ti-photo">
+                          @if (stickerImage(code); as img) {
+                            <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
+                          } @else if (stickerFlag(code)) {
+                            <img [src]="stickerFlag(code)" alt="" loading="lazy" />
+                          } @else {
+                            <span class="code-text">{{ code }}</span>
+                          }
+                        </div>
+                        <div class="ti-info">
+                          <div class="ti-name">{{ stickerName(code) }}</div>
+                          <div class="ti-country">
+                            @if (stickerFlag(code)) {
+                              <img class="ti-flag" [src]="stickerFlag(code)" alt="" />
+                            }
+                            <span>{{ stickerCountry(code) }} · {{ prettyCode(code) }}</span>
+                          </div>
+                        </div>
+                        @if (isFoil(code)) {
+                          <span class="ti-foil">FOIL</span>
                         }
                       </div>
                     }
@@ -119,13 +135,29 @@
                     }
                     <span class="count">{{ p.stickersReceived.length }}</span>
                   </div>
-                  <div class="stickers">
+                  <div class="trade-items">
                     @for (code of p.stickersReceived; track code) {
-                      <div class="mini" [class.foil]="isFoil(code)" [title]="stickerName(code)">
-                        @if (stickerImage(code); as img) {
-                          <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
-                        } @else {
-                          <span class="code-text">{{ code }}</span>
+                      <div class="trade-item" [class.foil]="isFoil(code)">
+                        <div class="ti-photo">
+                          @if (stickerImage(code); as img) {
+                            <img [src]="img" [alt]="stickerName(code)" loading="lazy" />
+                          } @else if (stickerFlag(code)) {
+                            <img [src]="stickerFlag(code)" alt="" loading="lazy" />
+                          } @else {
+                            <span class="code-text">{{ code }}</span>
+                          }
+                        </div>
+                        <div class="ti-info">
+                          <div class="ti-name">{{ stickerName(code) }}</div>
+                          <div class="ti-country">
+                            @if (stickerFlag(code)) {
+                              <img class="ti-flag" [src]="stickerFlag(code)" alt="" />
+                            }
+                            <span>{{ stickerCountry(code) }} · {{ prettyCode(code) }}</span>
+                          </div>
+                        </div>
+                        @if (isFoil(code)) {
+                          <span class="ti-foil">FOIL</span>
                         }
                       </div>
                     }

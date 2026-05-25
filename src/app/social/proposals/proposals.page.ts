@@ -18,7 +18,7 @@ import {
 import { SocialService } from '../../core/services/social.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { TradeProposal } from '../../core/models/trade-proposal.model';
-import { Sticker } from '../../core/models/catalog.model';
+import { Country, Sticker, flagUrl } from '../../core/models/catalog.model';
 
 type Tab = 'incoming' | 'outgoing' | 'history';
 
@@ -40,6 +40,7 @@ export class ProposalsPage implements OnInit {
   readonly outgoing = signal<TradeProposal[]>([]);
   readonly history = signal<TradeProposal[]>([]);
   readonly stickerByCode = signal<Map<string, Sticker>>(new Map());
+  private readonly countriesMap = signal<Map<string, Country>>(new Map());
 
   readonly list = computed<TradeProposal[]>(() => {
     if (this.tab() === 'incoming') return this.incoming();
@@ -69,12 +70,14 @@ export class ProposalsPage implements OnInit {
     this.loading.set(true);
     forkJoin({
       stickers: this.catalog.allStickers(),
+      countries: this.catalog.countries(),
       incoming: this.social.incomingProposals(),
       outgoing: this.social.outgoingProposals(),
       history: this.social.proposalHistory(),
     }).subscribe({
-      next: ({ stickers, incoming, outgoing, history }) => {
+      next: ({ stickers, countries, incoming, outgoing, history }) => {
         this.stickerByCode.set(new Map(stickers.map((s) => [s.code, s])));
+        this.countriesMap.set(new Map(countries.map((c) => [c.code, c])));
         this.incoming.set(incoming);
         this.outgoing.set(outgoing);
         this.history.set(history);
@@ -107,6 +110,26 @@ export class ProposalsPage implements OnInit {
 
   isFoil(code: string): boolean {
     return this.stickerByCode().get(code)?.foil ?? false;
+  }
+
+  /** Nombre del país del cromo (o "Especial" para intro/museo/coca-cola sin país) */
+  stickerCountry(code: string): string {
+    const cc = this.stickerByCode().get(code)?.countryCode;
+    if (!cc) return 'Especial';
+    return this.countriesMap().get(cc)?.name ?? cc;
+  }
+
+  /** Bandera del país del cromo (vacío si no tiene país) */
+  stickerFlag(code: string): string {
+    const cc = this.stickerByCode().get(code)?.countryCode;
+    if (!cc) return '';
+    const c = this.countriesMap().get(cc);
+    return c ? flagUrl(c.iso2, 40) : '';
+  }
+
+  /** Código formateado: "ARG10" → "ARG 10", "FWC1" → "FWC 1" */
+  prettyCode(code: string): string {
+    return code.replace(/^([A-Za-z]+)(\d+)$/, '$1 $2');
   }
 
   // Para incoming/history, el otro lado es el requester

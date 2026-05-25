@@ -8,7 +8,7 @@ import {
   IonBadge,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, albums, statsChart, people } from 'ionicons/icons';
+import { home, albums, statsChart, people, swapHorizontal } from 'ionicons/icons';
 import { SocialService } from '../core/services/social.service';
 
 @Component({
@@ -22,12 +22,14 @@ export class TabsPage implements OnInit {
   private readonly social = inject(SocialService);
 
   readonly pending = this.social.incomingCount;
+  readonly pendingProposals = this.social.pendingProposalsCount;
 
   constructor() {
-    addIcons({ home, albums, statsChart, people });
+    addIcons({ home, albums, statsChart, people, swapHorizontal });
   }
 
   ngOnInit(): void {
     this.social.incoming().subscribe({ error: () => {} });
+    this.social.proposalsPendingCount().subscribe({ error: () => {} });
   }
 }
