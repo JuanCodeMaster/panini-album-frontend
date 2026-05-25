@@ -145,15 +145,15 @@ export class FriendsPage implements OnInit {
   }
 
   openTrade(username: string): void {
-    this.router.navigate(['/friends', username, 'trade']);
+    this.router.navigate(['/tabs/friends', username, 'trade']);
   }
 
   openAlbum(username: string): void {
-    this.router.navigate(['/friends', username, 'album']);
+    this.router.navigate(['/tabs/friends', username, 'album']);
   }
 
   goTrades(): void {
-    this.router.navigateByUrl('/trades');
+    this.router.navigateByUrl('/tabs/trades');
   }
 
   readonly pendingProposals = this.social.pendingProposalsCount;

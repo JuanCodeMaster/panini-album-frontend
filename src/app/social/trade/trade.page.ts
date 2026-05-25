@@ -295,7 +295,7 @@ export class TradePage implements OnInit {
           );
           this.clearSelections();
           this.message.set('');
-          setTimeout(() => this.router.navigateByUrl('/trades'), 1200);
+          setTimeout(() => this.router.navigateByUrl('/tabs/trades'), 1200);
         },
         error: (err) => {
           this.sending.set(false);
@@ -307,7 +307,7 @@ export class TradePage implements OnInit {
   back(): void {
     const m = this.match();
     if (m) {
-      this.router.navigate(['/friends', m.friend.username, 'album']);
+      this.router.navigate(['/tabs/friends', m.friend.username, 'album']);
     } else {
       this.router.navigateByUrl('/tabs/friends');
     }
@@ -315,6 +315,6 @@ export class TradePage implements OnInit {
 
   openAlbum(): void {
     const m = this.match();
-    if (m) this.router.navigate(['/friends', m.friend.username, 'album']);
+    if (m) this.router.navigate(['/tabs/friends', m.friend.username, 'album']);
   }
 }

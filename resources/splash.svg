@@ -1,56 +1,55 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#12060A"/>
+      <stop offset="100%" stop-color="#0A0306"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0.3" y2="1">
       <stop offset="0%" stop-color="#E30613"/>
-      <stop offset="100%" stop-color="#0A1A3D"/>
+      <stop offset="100%" stop-color="#9b0510"/>
     </linearGradient>
-    <linearGradient id="cup" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#F4D27A"/>
-      <stop offset="100%" stop-color="#B89730"/>
+    <pattern id="dots" width="56" height="56" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="5" fill="rgba(255,255,255,0.16)"/>
+    </pattern>
+    <linearGradient id="dotsfade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.85"/>
+      <stop offset="55%" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
+    <mask id="dotsmask">
+      <rect x="1056" y="956" width="620" height="820" fill="url(#dotsfade)"/>
+    </mask>
   </defs>
 
-  <rect x="0" y="0" width="2732" height="2732" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2732" height="2732" fill="url(#sky)"/>
 
-  <!-- Halftone dots -->
-  <g opacity="0.10">
-    <circle cx="200" cy="200" r="10" fill="#FFF"/>
-    <circle cx="500" cy="180" r="8" fill="#FFF"/>
-    <circle cx="800" cy="220" r="9" fill="#FFF"/>
-    <circle cx="1200" cy="160" r="10" fill="#FFF"/>
-    <circle cx="1600" cy="200" r="8" fill="#FFF"/>
-    <circle cx="2000" cy="180" r="9" fill="#FFF"/>
-    <circle cx="2400" cy="220" r="10" fill="#FFF"/>
-    <circle cx="300" cy="400" r="9" fill="#FFF"/>
-    <circle cx="700" cy="380" r="8" fill="#FFF"/>
-    <circle cx="1100" cy="420" r="10" fill="#FFF"/>
-    <circle cx="1500" cy="400" r="9" fill="#FFF"/>
-    <circle cx="1900" cy="380" r="8" fill="#FFF"/>
-    <circle cx="2300" cy="420" r="10" fill="#FFF"/>
+  <!-- Figurita FM centrada -->
+  <g>
+    <rect x="1056" y="956" width="620" height="820" rx="64" fill="url(#card)"/>
+    <rect x="1056" y="956" width="620" height="820" rx="64" fill="url(#dots)" mask="url(#dotsmask)"/>
+    <!-- borde troquelado punteado -->
+    <rect x="1086" y="986" width="560" height="760" rx="44" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-dasharray="10 8"/>
+    <!-- cinta dorada -->
+    <g transform="rotate(40 1560 1080)">
+      <rect x="1430" y="1052" width="430" height="54" fill="#D4AF37"/>
+    </g>
+    <!-- FM -->
+    <g transform="translate(1230 1140) scale(1.30)" fill="#FFFFFF">
+      <rect x="0" y="0" width="22" height="120"/>
+      <rect x="0" y="0" width="60" height="20"/>
+      <rect x="0" y="50" width="46" height="18"/>
+      <rect x="85" y="0" width="22" height="120"/>
+      <rect x="183" y="0" width="22" height="120"/>
+      <path d="M96 2 L145 74 L194 2" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linejoin="round"/>
+    </g>
+    <rect x="1286" y="1480" width="280" height="8" rx="4" fill="#D4AF37"/>
+    <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" fill="#FFFFFF">
+      <text x="1366" y="1600" font-size="52" letter-spacing="8">FIGURITAS</text>
+      <text x="1366" y="1672" font-size="40" letter-spacing="12" fill="#D4AF37">· DEL MUNDIAL ·</text>
+    </g>
   </g>
 
-  <!-- Hash stripes corner -->
-  <g opacity="0.20" transform="translate(2400, 0)">
-    <rect x="0" y="0" width="40" height="600" transform="rotate(45 200 0)" fill="#D4AF37"/>
-    <rect x="80" y="0" width="40" height="600" transform="rotate(45 280 0)" fill="#D4AF37"/>
-    <rect x="160" y="0" width="40" height="600" transform="rotate(45 360 0)" fill="#D4AF37"/>
-    <rect x="240" y="0" width="40" height="600" transform="rotate(45 440 0)" fill="#D4AF37"/>
-  </g>
-
-  <!-- Mundial Mark centrada (scale 36) -->
-  <g transform="translate(466, 800) scale(36)" stroke-linecap="round">
-    <path d="M14 8 Q14 24, 25 28 Q36 24, 36 8 Z" fill="url(#cup)"/>
-    <path d="M14 8 L36 8 L34 4 L16 4 Z" fill="#D4AF37"/>
-    <rect x="22" y="28" width="6" height="10" fill="url(#cup)"/>
-    <rect x="17" y="38" width="16" height="3.5" rx="1" fill="#FFFFFF"/>
-    <rect x="14" y="41.5" width="22" height="5" rx="1.5" fill="#D4AF37"/>
-    <path d="M8 12 Q4 14, 4 18 Q4 22, 8 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
-    <path d="M42 12 Q46 14, 46 18 Q46 22, 42 22" stroke="#D4AF37" stroke-width="2.4" fill="none"/>
-  </g>
-
-  <g text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="#FFFFFF">
-    <text x="1366" y="2300" font-size="220" letter-spacing="14">FIGURITAS</text>
-    <text x="1366" y="2500" font-size="140" fill="#D4AF37" letter-spacing="32">DEL MUNDIAL</text>
-    <text x="1366" y="2640" font-size="56" font-weight="700" letter-spacing="40" opacity="0.9">USA · CANADA · MEXICO · 2026</text>
+  <!-- Wordmark inferior -->
+  <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900">
+    <text x="1366" y="1990" font-size="58" letter-spacing="16" fill="rgba(255,255,255,0.55)">USA · CANADÁ · MÉXICO · 2026</text>
   </g>
 </svg>

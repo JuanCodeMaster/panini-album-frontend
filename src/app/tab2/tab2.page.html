@@ -110,7 +110,13 @@
                   <button
                     class="slot-wrap"
                     [class.match]="matchesQuery(s)"
-                    (click)="toggleSticker(s.code)"
+                    [class.pressing]="pressedCode() === s.code"
+                    (pointerdown)="onStickerPressStart(s.code, $event)"
+                    (pointermove)="onStickerPressMove($event)"
+                    (pointerup)="onStickerPressEnd(s.code, $event)"
+                    (pointercancel)="cancelStickerPress()"
+                    (pointerleave)="cancelStickerPress()"
+                    (contextmenu)="$event.preventDefault()"
                   >
                     <div
                       class="slot"

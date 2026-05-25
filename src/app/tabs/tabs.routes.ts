@@ -47,6 +47,22 @@ export const routes: Routes = [
           import('../social/friends/friends.page').then((m) => m.FriendsPage),
       },
       {
+        path: 'friends/:username/trade',
+        loadComponent: () => import('../social/trade/trade.page').then((m) => m.TradePage),
+      },
+      {
+        path: 'friends/:username/album',
+        loadComponent: () => import('../social/friend-album/friend-album.page').then((m) => m.FriendAlbumPage),
+      },
+      {
+        path: 'friends/:username/album/:code',
+        loadComponent: () => import('../social/friend-country/friend-country.page').then((m) => m.FriendCountryPage),
+      },
+      {
+        path: 'trades',
+        loadComponent: () => import('../social/proposals/proposals.page').then((m) => m.ProposalsPage),
+      },
+      {
         path: '',
         redirectTo: 'tab1',
         pathMatch: 'full',

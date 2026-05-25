@@ -28,28 +28,24 @@ export const routes: Routes = [
   },
   {
     path: 'friends',
-    canActivate: [authGuard],
-    loadComponent: () => import('./social/friends/friends.page').then((m) => m.FriendsPage),
+    redirectTo: 'tabs/friends',
+    pathMatch: 'full',
   },
   {
     path: 'friends/:username/trade',
-    canActivate: [authGuard],
-    loadComponent: () => import('./social/trade/trade.page').then((m) => m.TradePage),
+    redirectTo: 'tabs/friends/:username/trade',
   },
   {
     path: 'friends/:username/album',
-    canActivate: [authGuard],
-    loadComponent: () => import('./social/friend-album/friend-album.page').then((m) => m.FriendAlbumPage),
+    redirectTo: 'tabs/friends/:username/album',
   },
   {
     path: 'friends/:username/album/:code',
-    canActivate: [authGuard],
-    loadComponent: () => import('./social/friend-country/friend-country.page').then((m) => m.FriendCountryPage),
+    redirectTo: 'tabs/friends/:username/album/:code',
   },
   {
     path: 'trades',
-    canActivate: [authGuard],
-    loadComponent: () => import('./social/proposals/proposals.page').then((m) => m.ProposalsPage),
+    redirectTo: 'tabs/trades',
   },
   {
     path: '',

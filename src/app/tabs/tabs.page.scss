@@ -1,9 +1,8 @@
 .mundial-tabbar {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
+  position: relative;
+  width: auto;
   height: 64px;
+  margin: 0 12px calc(8px + var(--app-safe-bottom, 0px));
   border: none;
   border-radius: 22px;
   background: rgba(22, 16, 36, 0.92);
@@ -13,6 +12,7 @@
     0 8px 28px rgba(0, 0, 0, 0.25),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.10);
   padding: 6px;
+  contain: layout paint;
 
   --background: transparent;
   --border: none;
@@ -32,9 +32,9 @@
 
     ion-label {
       font-family: var(--font-body);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 800;
-      letter-spacing: 0.10em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       margin-top: 4px;
     }

@@ -168,7 +168,7 @@ export class Tab1Page implements OnInit {
   }
 
   openTradeWith(username: string): void {
-    this.router.navigate(['/friends', username, 'trade']);
+    this.router.navigate(['/tabs/friends', username, 'trade']);
   }
 
   logout(): void {

@@ -2,7 +2,17 @@
   <div class="onboarding-shell">
     <header class="top-bar">
       <span class="brand">
-        <ion-icon name="trophy-outline" aria-hidden="true"></ion-icon>
+        <svg width="22" height="22" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <rect x="6" y="6" width="88" height="88" rx="22" fill="#E30613"/>
+          <g transform="translate(22 30) scale(0.27)" fill="#FFFFFF">
+            <rect x="0" y="0" width="22" height="120"/>
+            <rect x="0" y="0" width="60" height="20"/>
+            <rect x="0" y="50" width="46" height="18"/>
+            <rect x="85" y="0" width="22" height="120"/>
+            <rect x="183" y="0" width="22" height="120"/>
+            <path d="M96 2 L145 74 L194 2" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linejoin="round"/>
+          </g>
+        </svg>
         FIGURITAS DEL MUNDIAL
       </span>
       <button class="skip-btn" type="button" (click)="skip()" *ngIf="!isLast()">Saltar</button>

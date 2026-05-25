@@ -45,6 +45,14 @@ export class Tab2Page implements OnInit {
   readonly sort = signal<SortMode>('album');
   readonly expandedCodes = signal<Set<string>>(new Set());
   readonly allStickersByCountry = signal<Record<string, Sticker[]>>({});
+  readonly pressedCode = signal<string | null>(null);
+
+  private pressTimer: ReturnType<typeof setTimeout> | null = null;
+  private didLongPress = false;
+  private pressStartX = 0;
+  private pressStartY = 0;
+  private static readonly LONG_PRESS_MS = 520;
+  private static readonly MOVE_TOLERANCE_PX = 14;
 
   readonly progressMap = computed<Map<string, number>>(() => {
     const m = new Map<string, number>();
@@ -148,7 +156,7 @@ export class Tab2Page implements OnInit {
         // Indexar stickers por país
         const byCountry: Record<string, Sticker[]> = {};
         for (const s of stickers) {
-          if (!s.countryCode) continue;
+          if (!this.isTeamSticker(s)) continue;
           if (!byCountry[s.countryCode]) byCountry[s.countryCode] = [];
           byCountry[s.countryCode].push(s);
         }
@@ -230,10 +238,70 @@ export class Tab2Page implements OnInit {
     return this.qty(stickerCode) > 0;
   }
 
+  private isTeamSticker(sticker: Sticker): sticker is Sticker & { countryCode: string } {
+    const n = sticker.numberInCountry ?? 0;
+    return sticker.sectionCode === 'TEAM' && !!sticker.countryCode && n >= 1 && n <= 20;
+  }
+
   toggleSticker(stickerCode: string): void {
     // Tap siempre incrementa (añade primera vez o suma una repetida más).
     // Para restar el usuario va al detalle de país.
     this.album.increment(stickerCode).subscribe();
+  }
+
+  onStickerPressStart(stickerCode: string, event: PointerEvent): void {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    this.didLongPress = false;
+    this.pressStartX = event.clientX;
+    this.pressStartY = event.clientY;
+    this.pressedCode.set(stickerCode);
+    this.pressTimer = setTimeout(() => {
+      this.didLongPress = true;
+      this.pressedCode.set(null);
+      if (this.qty(stickerCode) > 0) {
+        this.album.decrement(stickerCode).subscribe();
+        this.haptic();
+      }
+    }, Tab2Page.LONG_PRESS_MS);
+  }
+
+  onStickerPressMove(event: PointerEvent): void {
+    if (this.pressTimer === null) return;
+    const dx = event.clientX - this.pressStartX;
+    const dy = event.clientY - this.pressStartY;
+    if (Math.hypot(dx, dy) > Tab2Page.MOVE_TOLERANCE_PX) {
+      this.cancelStickerPress();
+    }
+  }
+
+  onStickerPressEnd(stickerCode: string, event: PointerEvent): void {
+    event.preventDefault();
+    this.clearPressTimer();
+    this.pressedCode.set(null);
+    if (this.didLongPress) {
+      this.didLongPress = false;
+      return;
+    }
+    this.album.increment(stickerCode).subscribe();
+  }
+
+  cancelStickerPress(): void {
+    this.clearPressTimer();
+    this.didLongPress = false;
+    this.pressedCode.set(null);
+  }
+
+  private clearPressTimer(): void {
+    if (this.pressTimer) {
+      clearTimeout(this.pressTimer);
+      this.pressTimer = null;
+    }
+  }
+
+  private haptic(): void {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(35); } catch {}
+    }
   }
 
   openCountry(code: string): void {

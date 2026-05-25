@@ -51,7 +51,7 @@ export class FriendCountryPage implements OnInit {
     }).subscribe({
       next: ({ countries, stickers, summary }) => {
         this.country.set(countries.find((c) => c.code === code) ?? null);
-        this.stickers.set(stickers);
+        this.stickers.set(stickers.filter((s) => this.isTeamSticker(s)));
         this.quantities.set(summary.stickerQuantities);
         this.loading.set(false);
       },
@@ -74,7 +74,12 @@ export class FriendCountryPage implements OnInit {
     return this.qty(code) > 0;
   }
 
+  private isTeamSticker(sticker: Sticker): boolean {
+    const n = sticker.numberInCountry ?? 0;
+    return sticker.sectionCode === 'TEAM' && n >= 1 && n <= 20;
+  }
+
   back(): void {
-    this.router.navigate(['/friends', this.username(), 'album']);
+    this.router.navigate(['/tabs/friends', this.username(), 'album']);
   }
 }

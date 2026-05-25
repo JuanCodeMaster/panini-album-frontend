@@ -22,8 +22,8 @@ async function convert(inputName, outputName, size) {
 
 console.log('Generando PNGs de íconos…');
 await convert('icon.svg', 'icon.png', 1024);
-await convert('icon.svg', 'icon-foreground.png', 1024);
-await convert('icon.svg', 'icon-background.png', 1024);
+await convert('icon-foreground.svg', 'icon-foreground.png', 1024);
+await convert('icon-background.svg', 'icon-background.png', 1024);
 await convert('splash.svg', 'splash.png', 2732);
 await convert('splash.svg', 'splash-dark.png', 2732);
 console.log('✓ Listo. Ahora corre: npx @capacitor/assets generate');

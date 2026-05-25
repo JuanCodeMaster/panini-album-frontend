@@ -119,7 +119,7 @@ export class FriendAlbumPage implements OnInit {
         this.summary.set(summary);
         const byCountry: Record<string, Sticker[]> = {};
         for (const s of stickers) {
-          if (!s.countryCode) continue;
+          if (!this.isTeamSticker(s)) continue;
           if (!byCountry[s.countryCode]) byCountry[s.countryCode] = [];
           byCountry[s.countryCode].push(s);
         }
@@ -206,12 +206,17 @@ export class FriendAlbumPage implements OnInit {
     return this.qtyOf(stickerCode) > 0;
   }
 
+  private isTeamSticker(sticker: Sticker): sticker is Sticker & { countryCode: string } {
+    const n = sticker.numberInCountry ?? 0;
+    return sticker.sectionCode === 'TEAM' && !!sticker.countryCode && n >= 1 && n <= 20;
+  }
+
   openCountry(code: string): void {
-    this.router.navigate(['/friends', this.username(), 'album', code]);
+    this.router.navigate(['/tabs/friends', this.username(), 'album', code]);
   }
 
   openTrade(): void {
-    this.router.navigate(['/friends', this.username(), 'trade']);
+    this.router.navigate(['/tabs/friends', this.username(), 'trade']);
   }
 
   back(): void {

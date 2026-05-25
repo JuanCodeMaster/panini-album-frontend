@@ -43,7 +43,27 @@
  * Tab bar: position: absolute; bottom: 12px; height: 64px → ocupa 76px.
  * 120px da buffer para sombras y safe area inferior.
  * -------------------------------------------------------------------------- */
-ion-content {
-  --padding-bottom: 120px;
+:root {
+  --app-safe-top: env(safe-area-inset-top, 0px);
+  --app-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --app-tabbar-height: 72px;
 }
 
+html,
+body,
+ion-app {
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+
+ion-content {
+  --padding-top: max(12px, var(--app-safe-top));
+  --padding-bottom: calc(var(--app-tabbar-height) + var(--app-safe-bottom) + 18px);
+}
+
+@media (max-width: 430px) {
+  .display-title {
+    font-size: clamp(38px, 12vw, 54px) !important;
+    line-height: 0.95 !important;
+  }
+}

@@ -416,9 +416,37 @@
   box-sizing: border-box;
   -webkit-appearance: none;
   appearance: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  user-select: none;
   transition: transform 0.12s ease;
 
   &:active { transform: scale(0.95); }
+
+  &.pressing {
+    transform: scale(0.93);
+
+    .slot.owned {
+      box-shadow:
+        0 0 0 2px rgba(227, 6, 19, 0.9),
+        0 3px 10px rgba(227, 6, 19, 0.35);
+    }
+
+    .slot.owned::after {
+      content: "RESTAR";
+      position: absolute;
+      inset: auto 4px 6px;
+      z-index: 4;
+      border-radius: 4px;
+      background: rgba(227, 6, 19, 0.95);
+      color: #FFF;
+      font-family: var(--font-display);
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      padding: 4px 2px;
+    }
+  }
 
   &.match .slot {
     box-shadow: 0 0 0 2px var(--m-gold), 0 2px 6px rgba(212, 175, 55, 0.5);

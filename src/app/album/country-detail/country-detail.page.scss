@@ -326,32 +326,7 @@
 }
 
 .dup-controls {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 6px;
-  z-index: 2;
-
-  button {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background: var(--m-accent);
-    color: #FFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
-    transition: background 0.12s ease, transform 0.12s ease;
-
-    ion-icon { font-size: 16px; }
-
-    &:active { background: var(--m-primary); transform: scale(0.92); }
-  }
+  display: none;
 }
 
 // Slot vacío

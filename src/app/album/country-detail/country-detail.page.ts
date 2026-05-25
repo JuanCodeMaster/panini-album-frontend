@@ -9,8 +9,6 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  add,
-  remove,
   image,
   person,
   chevronBack,
@@ -43,7 +41,7 @@ export class CountryDetailPage implements OnInit {
   });
 
   constructor() {
-    addIcons({ add, remove, image, person, chevronBack });
+    addIcons({ image, person, chevronBack });
   }
 
   ngOnInit(): void {
@@ -60,7 +58,7 @@ export class CountryDetailPage implements OnInit {
     }).subscribe({
       next: ({ countries, stickers }) => {
         this.country.set(countries.find((c) => c.code === code) ?? null);
-        this.stickers.set(stickers);
+        this.stickers.set(stickers.filter((s) => this.isTeamSticker(s)));
         this.loading.set(false);
       },
       error: (err) => {
@@ -86,6 +84,11 @@ export class CountryDetailPage implements OnInit {
     this.location.back();
   }
 
+  private isTeamSticker(sticker: Sticker): boolean {
+    const n = sticker.numberInCountry ?? 0;
+    return sticker.sectionCode === 'TEAM' && n >= 1 && n <= 20;
+  }
+
   // ── Tap vs long-press ──
   // Tap = sumar (1ª vez la pega, después suma repetida)
   // Long-press 500ms = restar una (sólo si tienes ≥1) sin entrar al detalle
@@ -98,8 +101,6 @@ export class CountryDetailPage implements OnInit {
   private static readonly MOVE_TOLERANCE_PX = 14;
 
   onPressStart(stickerCode: string, event: PointerEvent): void {
-    const t = event.target as HTMLElement;
-    if (t.closest('.dup-controls')) return;
     this.didLongPress = false;
     this.pressStartX = event.clientX;
     this.pressStartY = event.clientY;
@@ -125,8 +126,6 @@ export class CountryDetailPage implements OnInit {
   }
 
   onPressEnd(stickerCode: string, event: PointerEvent): void {
-    const t = event.target as HTMLElement;
-    if (t.closest('.dup-controls')) return;
     this.clearTimer();
     if (this.didLongPress) {
       this.didLongPress = false;
@@ -154,13 +153,4 @@ export class CountryDetailPage implements OnInit {
     }
   }
 
-  increment(stickerCode: string, event: Event): void {
-    event.stopPropagation();
-    this.album.increment(stickerCode).subscribe();
-  }
-
-  decrement(stickerCode: string, event: Event): void {
-    event.stopPropagation();
-    this.album.decrement(stickerCode).subscribe();
-  }
 }
