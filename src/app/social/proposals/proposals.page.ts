@@ -41,6 +41,7 @@ export class ProposalsPage implements OnInit {
   readonly history = signal<TradeProposal[]>([]);
   readonly stickerByCode = signal<Map<string, Sticker>>(new Map());
   private readonly countriesMap = signal<Map<string, Country>>(new Map());
+  readonly expandedIds = signal<Set<number>>(new Set());
 
   readonly list = computed<TradeProposal[]>(() => {
     if (this.tab() === 'incoming') return this.incoming();
@@ -81,6 +82,11 @@ export class ProposalsPage implements OnInit {
         this.incoming.set(incoming);
         this.outgoing.set(outgoing);
         this.history.set(history);
+        // Las recibidas pendientes arrancan expandidas (hay que actuar);
+        // el resto colapsadas para no saturar.
+        this.expandedIds.set(
+          new Set(incoming.filter((p) => p.status === 'PENDING').map((p) => p.id))
+        );
         this.loading.set(false);
       },
       error: (err) => {
@@ -92,6 +98,17 @@ export class ProposalsPage implements OnInit {
 
   setTab(t: Tab): void {
     this.tab.set(t);
+  }
+
+  isExpanded(id: number): boolean {
+    return this.expandedIds().has(id);
+  }
+
+  toggle(id: number): void {
+    const s = new Set(this.expandedIds());
+    if (s.has(id)) s.delete(id);
+    else s.add(id);
+    this.expandedIds.set(s);
   }
 
   initials(name: string | null, fallback: string): string {

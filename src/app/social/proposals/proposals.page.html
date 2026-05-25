@@ -55,8 +55,8 @@
     } @else {
       <div class="prop-list">
         @for (p of list(); track p.id) {
-          <div class="prop-card" [class.gift]="p.gift" [class.accepted]="p.status === 'ACCEPTED'" [class.rejected]="p.status === 'REJECTED' || p.status === 'CANCELLED'">
-            <div class="prop-head">
+          <div class="prop-card" [class.gift]="p.gift" [class.accepted]="p.status === 'ACCEPTED'" [class.rejected]="p.status === 'REJECTED' || p.status === 'CANCELLED'" [class.collapsed]="!isExpanded(p.id)">
+            <button class="prop-head" (click)="toggle(p.id)">
               <div class="avatar" [class.gold]="p.gift">{{ initials(otherUser(p).displayName, otherUser(p).username) }}</div>
               <div class="prop-meta">
                 <div class="name-row">
@@ -75,8 +75,16 @@
                 </div>
                 <div class="handle">&#64;{{ otherUser(p).username }} · {{ statusLabel(p) }}</div>
               </div>
-            </div>
+              <div class="prop-summary">
+                <span class="sum give"><ion-icon name="arrow-up"></ion-icon>{{ p.stickersGiven.length }}</span>
+                @if (!p.gift) {
+                  <span class="sum receive"><ion-icon name="arrow-down"></ion-icon>{{ p.stickersReceived.length }}</span>
+                }
+              </div>
+              <ion-icon name="chevron-down" class="prop-chev"></ion-icon>
+            </button>
 
+            @if (isExpanded(p.id)) {
             @if (p.message) {
               <div class="prop-msg">"{{ p.message }}"</div>
             }
@@ -185,6 +193,7 @@
                   Cancelar
                 </button>
               </div>
+            }
             }
           </div>
         }

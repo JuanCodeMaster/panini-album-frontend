@@ -164,6 +164,46 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.prop-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  .sum {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--m-muted);
+
+    ion-icon { font-size: 13px; }
+    &.give ion-icon { color: var(--m-primary); }
+    &.receive ion-icon { color: var(--m-success); }
+  }
+}
+
+.prop-chev {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--m-muted);
+  transition: transform 0.2s ease;
+}
+
+.prop-card:not(.collapsed) .prop-chev {
+  transform: rotate(180deg);
 }
 
 .avatar {
