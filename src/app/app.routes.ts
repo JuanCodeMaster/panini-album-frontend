@@ -27,6 +27,12 @@ export const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
   },
   {
+    // Chat a pantalla completa (fuera de tabs para que el tab bar no tape el input)
+    path: 'chat/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./social/chat/chat.page').then((m) => m.ChatPage),
+  },
+  {
     path: 'friends',
     redirectTo: 'tabs/friends',
     pathMatch: 'full',

@@ -105,7 +105,7 @@ export class ProposalsPage implements OnInit {
 
   openChat(p: TradeProposal): void {
     const other = this.otherUser(p);
-    this.router.navigate(['/tabs/trades', p.id, 'chat'], {
+    this.router.navigate(['/chat', p.id], {
       queryParams: { with: other.displayName || other.username },
     });
   }
