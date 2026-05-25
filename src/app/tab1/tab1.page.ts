@@ -19,11 +19,14 @@ import {
   gift,
   arrowUp,
   arrowDown,
+  moon,
+  sunny,
 } from 'ionicons/icons';
 import { AuthService } from '../core/services/auth.service';
 import { AlbumService } from '../core/services/album.service';
 import { CatalogService } from '../core/services/catalog.service';
 import { SocialService } from '../core/services/social.service';
+import { ThemeService } from '../core/services/theme.service';
 import { ProgressRingComponent } from '../shared/progress-ring/progress-ring.component';
 import { Country, Sticker, flagUrl } from '../core/models/catalog.model';
 import { UserSticker } from '../core/models/album.model';
@@ -53,6 +56,8 @@ export class Tab1Page implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly social = inject(SocialService);
   private readonly router = inject(Router);
+  private readonly theme = inject(ThemeService);
+  readonly isDark = this.theme.isDark;
 
   readonly loading = signal(true);
   readonly countries = signal<Country[]>([]);
@@ -124,7 +129,13 @@ export class Tab1Page implements OnInit {
       gift,
       arrowUp,
       arrowDown,
+      moon,
+      sunny,
     });
+  }
+
+  toggleTheme(): void {
+    this.theme.toggle();
   }
 
   ngOnInit(): void {

@@ -1,20 +1,16 @@
 .mundial-tabbar {
-  position: relative;
-  width: auto;
-  height: 64px;
-  margin: 0 12px calc(8px + var(--app-safe-bottom, 0px));
+  // Barra fija al fondo, ancho completo (no flotante → no desaparece).
+  width: 100%;
+  height: calc(60px + var(--app-safe-bottom, 0px));
+  padding: 4px 0 var(--app-safe-bottom, 0px);
+  margin: 0;
   border: none;
-  border-radius: 22px;
-  background: rgba(22, 16, 36, 0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.25),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.10);
-  padding: 6px;
-  contain: layout paint;
+  border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161024;
+  box-shadow: 0 -3px 18px rgba(0, 0, 0, 0.28);
 
-  --background: transparent;
+  --background: #161024;
   --border: none;
   --color: rgba(255, 255, 255, 0.65);
   --color-selected: var(--m-primary);

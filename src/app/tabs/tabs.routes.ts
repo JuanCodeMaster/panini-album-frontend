@@ -17,11 +17,6 @@ export const routes: Routes = [
           import('../tab2/tab2.page').then((m) => m.Tab2Page),
       },
       {
-        path: 'tab2/specials',
-        loadComponent: () =>
-          import('../album/specials/specials.page').then((m) => m.SpecialsPage),
-      },
-      {
         path: 'tab2/:code',
         loadComponent: () =>
           import('../album/country-detail/country-detail.page').then((m) => m.CountryDetailPage),

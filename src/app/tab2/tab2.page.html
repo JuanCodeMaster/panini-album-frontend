@@ -8,16 +8,6 @@
     <div class="header-sub">{{ filtered().length }} selecciones · 980 cromos</div>
   </div>
 
-  <!-- Especiales CTA -->
-  <button class="specials-cta" (click)="openSpecials()">
-    <div class="sp-icon"><ion-icon name="sparkles"></ion-icon></div>
-    <div class="sp-text">
-      <div class="sp-title">Cromos especiales</div>
-      <div class="sp-sub">Logo, sedes, museo y fotos de equipo</div>
-    </div>
-    <ion-icon name="arrow-forward" class="sp-arrow"></ion-icon>
-  </button>
-
   <!-- Search + Filters -->
   <div class="toolbar">
     <div class="search">
@@ -150,4 +140,83 @@
       </div>
     }
   </div>
+
+  <!-- Cromos especiales (integrados, sin query activa) -->
+  @if (!query() && specialGroups().length > 0) {
+    <div class="special-divider">
+      <ion-icon name="sparkles"></ion-icon>
+      <span>Cromos especiales</span>
+    </div>
+
+    <div class="rows">
+      @for (g of specialGroups(); track g.key) {
+        <div class="row-wrap" [class.expanded]="isExpanded(g.key)">
+          <button class="row" (click)="toggleExpand(g.key)">
+            <span class="thumb special-thumb">
+              <ion-icon [name]="g.icon"></ion-icon>
+            </span>
+            <span class="info">
+              <span class="info-top">
+                <span class="name">{{ g.title }}</span>
+              </span>
+              <span class="info-bottom">
+                <span class="bar">
+                  <span
+                    class="fill"
+                    [class.gold]="specialOwned(g) === g.stickers.length"
+                    [class.muted]="specialOwned(g) === 0"
+                    [style.width.%]="(specialOwned(g) / g.stickers.length) * 100"
+                  ></span>
+                </span>
+                <span class="mono">{{ specialOwned(g) }}/{{ g.stickers.length }}</span>
+              </span>
+            </span>
+            <ion-icon name="chevron-down" class="chev"></ion-icon>
+          </button>
+
+          @if (isExpanded(g.key)) {
+            <div class="inline-grid">
+              <div class="slot-grid">
+                @for (s of g.stickers; track s.code) {
+                  <button
+                    class="slot-wrap"
+                    [class.pressing]="pressedCode() === s.code"
+                    (pointerdown)="onStickerPressStart(s.code, $event)"
+                    (pointermove)="onStickerPressMove($event)"
+                    (pointerup)="onStickerPressEnd(s.code, $event)"
+                    (pointercancel)="cancelStickerPress()"
+                    (pointerleave)="cancelStickerPress()"
+                    (contextmenu)="$event.preventDefault()"
+                  >
+                    <div class="slot special-slot" [class.owned]="isOwned(s.code)" [class.foil]="s.foil">
+                      @if (isOwned(s.code)) {
+                        @if (s.imageUrl) {
+                          <img [src]="s.imageUrl" alt="" class="bg" />
+                        } @else if (specialFlag(s)) {
+                          <img [src]="specialFlag(s)" alt="" class="bg" />
+                        } @else {
+                          <ion-icon [name]="specialIconFor(s)" class="sp-ph"></ion-icon>
+                        }
+                      } @else {
+                        <ion-icon [name]="specialIconFor(s)" class="sp-ph muted"></ion-icon>
+                      }
+                      @if (s.foil) {
+                        <span class="foil-tag">F</span>
+                      }
+                      @if (qty(s.code) > 1) {
+                        <span class="dup-tag">×{{ qty(s.code) }}</span>
+                      }
+                    </div>
+                    <div class="slot-name" [class.muted]="!isOwned(s.code)">
+                      {{ s.displayName }}
+                    </div>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
 </ion-content>

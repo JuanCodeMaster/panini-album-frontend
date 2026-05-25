@@ -7,6 +7,9 @@
     <div class="hero-top">
       <div class="greeting">Hola, {{ firstName() }}</div>
       <div class="actions">
+        <button class="icon-btn" (click)="toggleTheme()" [attr.aria-label]="isDark() ? 'Modo claro' : 'Modo oscuro'">
+          <ion-icon [name]="isDark() ? 'sunny' : 'moon'"></ion-icon>
+        </button>
         <button class="icon-btn" (click)="go('/tabs/friends')" aria-label="Amigos">
           <ion-icon name="notifications"></ion-icon>
           @if (pendingFriends() > 0) {

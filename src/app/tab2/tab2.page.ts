@@ -21,12 +21,25 @@ import {
   textOutline,
   alertCircleOutline,
   appsOutline,
+  star,
+  trophy,
+  people,
+  shieldOutline,
+  imageOutline,
 } from 'ionicons/icons';
 import { CatalogService } from '../core/services/catalog.service';
 import { AlbumService } from '../core/services/album.service';
 import { Country, Sticker, flagUrl } from '../core/models/catalog.model';
 
 type SortMode = 'album' | 'group' | 'abc' | 'missing';
+
+interface SpecialGroup {
+  key: string;
+  title: string;
+  sub: string;
+  icon: string;
+  stickers: Sticker[];
+}
 
 @Component({
   selector: 'app-tab2',
@@ -45,7 +58,24 @@ export class Tab2Page implements OnInit {
   readonly sort = signal<SortMode>('album');
   readonly expandedCodes = signal<Set<string>>(new Set());
   readonly allStickersByCountry = signal<Record<string, Sticker[]>>({});
+  readonly allStickersRaw = signal<Sticker[]>([]);
   readonly pressedCode = signal<string | null>(null);
+
+  /** Grupos de cromos especiales (Intro, Coca-Cola, Museo) integrados en el álbum */
+  readonly specialGroups = computed<SpecialGroup[]>(() => {
+    const all = this.allStickersRaw();
+    if (!all.length) return [];
+    const byNum = (a: Sticker, b: Sticker) =>
+      a.code.localeCompare(b.code, undefined, { numeric: true });
+    const intro = all.filter((s) => s.sectionCode === 'INTRO').sort(byNum);
+    const coca = all.filter((s) => s.sectionCode === 'COCACOLA').sort(byNum);
+    const museum = all.filter((s) => s.sectionCode === 'MUSEUM').sort(byNum);
+    const groups: SpecialGroup[] = [];
+    if (intro.length) groups.push({ key: 'INTRO', title: 'Introducción', sub: 'Logo, trofeo y sedes', icon: 'sparkles', stickers: intro });
+    if (coca.length) groups.push({ key: 'COCACOLA', title: 'Coca-Cola', sub: 'Exclusivos foil', icon: 'star', stickers: coca });
+    if (museum.length) groups.push({ key: 'MUSEUM', title: 'FIFA Museum', sub: 'Mundiales históricos', icon: 'trophy', stickers: museum });
+    return groups;
+  });
 
   private pressTimer: ReturnType<typeof setTimeout> | null = null;
   private didLongPress = false;
@@ -137,7 +167,31 @@ export class Tab2Page implements OnInit {
       textOutline,
       alertCircleOutline,
       appsOutline,
+      star,
+      trophy,
+      people,
+      shieldOutline,
+      imageOutline,
     });
+  }
+
+  specialOwned(g: SpecialGroup): number {
+    return g.stickers.filter((s) => this.isOwned(s.code)).length;
+  }
+
+  specialIconFor(s: Sticker): string {
+    if (s.stickerType === 'LOGO_PANINI') return 'star';
+    if (s.stickerType === 'HOST') return 'sparkles';
+    if (s.stickerType === 'MUSEUM') return 'trophy';
+    if (s.stickerType === 'TEAM_PHOTO') return 'people';
+    if (s.stickerType === 'BADGE') return 'shield-outline';
+    return 'sparkles';
+  }
+
+  specialFlag(s: Sticker): string {
+    if (!s.countryCode) return '';
+    const c = this.countries().find((x) => x.code === s.countryCode);
+    return c ? flagUrl(c.iso2, 80) : '';
   }
 
   setSort(s: SortMode): void {
@@ -165,6 +219,7 @@ export class Tab2Page implements OnInit {
           byCountry[code].sort((a, b) => (a.numberInCountry ?? 0) - (b.numberInCountry ?? 0));
         }
         this.allStickersByCountry.set(byCountry);
+        this.allStickersRaw.set(stickers);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -306,9 +361,5 @@ export class Tab2Page implements OnInit {
 
   openCountry(code: string): void {
     this.router.navigate(['/tabs/tab2', code]);
-  }
-
-  openSpecials(): void {
-    this.router.navigateByUrl('/tabs/tab2/specials');
   }
 }

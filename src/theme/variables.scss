@@ -81,22 +81,20 @@
   --ion-color-success-tint: #35b15c;
 }
 
-// ── Dark mode (sistema) ──
-@media (prefers-color-scheme: dark) {
-  :root {
-    --m-bg: #0C0E14;
-    --m-surface: #171A24;
-    --m-surface-2: #1F2330;
-    --m-ink: #F4ECD8;
-    --m-muted: #9892A6;
-    --m-hairline: rgba(244, 236, 216, 0.10);
-    --m-hairline-2: rgba(244, 236, 216, 0.18);
+// ── Dark mode (por clase .ion-palette-dark en <html>, lo controla ThemeService) ──
+:root.ion-palette-dark {
+  --m-bg: #0C0E14;
+  --m-surface: #171A24;
+  --m-surface-2: #1F2330;
+  --m-ink: #F4ECD8;
+  --m-muted: #9892A6;
+  --m-hairline: rgba(244, 236, 216, 0.10);
+  --m-hairline-2: rgba(244, 236, 216, 0.18);
 
-    --ion-background-color: var(--m-bg);
-    --ion-background-color-rgb: 12, 14, 20;
-    --ion-text-color: var(--m-ink);
-    --ion-text-color-rgb: 244, 236, 216;
-  }
+  --ion-background-color: var(--m-bg);
+  --ion-background-color-rgb: 12, 14, 20;
+  --ion-text-color: var(--m-ink);
+  --ion-text-color-rgb: 244, 236, 216;
 }
 
 // ── Helpers reutilizables ──

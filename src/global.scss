@@ -33,20 +33,19 @@
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Dark mode por CLASE (.ion-palette-dark en <html>) — lo maneja ThemeService */
+@import '@ionic/angular/css/palettes/dark.class.css';
 
 /* ----------------------------------------------------------------------------
- * Padding inferior para que el tab bar flotante no tape contenido.
+ * Padding inferior para que el tab bar fijo no tape contenido.
  * Va aquí (global) porque los estilos de tabs.page.scss son encapsulados
  * al componente TabsPage y no llegan a los ion-content de las páginas hijas.
- * Tab bar: position: absolute; bottom: 12px; height: 64px → ocupa 76px.
- * 120px da buffer para sombras y safe area inferior.
+ * Tab bar fijo: 60px de alto + safe area inferior.
  * -------------------------------------------------------------------------- */
 :root {
   --app-safe-top: env(safe-area-inset-top, 0px);
   --app-safe-bottom: env(safe-area-inset-bottom, 0px);
-  --app-tabbar-height: 72px;
+  --app-tabbar-height: 60px;
 }
 
 html,
