@@ -11,6 +11,55 @@
     <div class="header-sub">Propuestas enviadas y recibidas</div>
   </div>
 
+  <!-- Cerca de ti -->
+  <div class="nearby-block">
+    <div class="nearby-head">
+      <div class="nh-title">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>Cerca de ti</span>
+      </div>
+      <button class="loc-toggle" [class.on]="location.sharing()" (click)="toggleLocation()" [disabled]="location.busy()">
+        @if (location.busy()) {
+          <ion-spinner name="dots"></ion-spinner>
+        } @else if (location.sharing()) {
+          Compartiendo · tocar para apagar
+        } @else {
+          Activar ubicación
+        }
+      </button>
+    </div>
+
+    @if (location.error()) {
+      <div class="loc-error">{{ location.error() }}</div>
+    }
+
+    @if (location.sharing()) {
+      @if (nearby().length === 0) {
+        <div class="nearby-empty">Nadie con match a menos de 5 km por ahora.</div>
+      } @else {
+        <div class="nearby-list">
+          @for (n of nearby(); track n.user.username) {
+            <div class="nearby-card">
+              <div class="nc-avatar">{{ initials(n.user.displayName, n.user.username) }}</div>
+              <div class="nc-info">
+                <div class="nc-name">{{ n.user.displayName || n.user.username }}</div>
+                <div class="nc-meta">
+                  <span class="nc-dist"><ion-icon name="navigate-outline"></ion-icon>{{ n.distanceKm }} km</span>
+                  <span class="nc-match">Te da {{ n.receiveCount }} · le das {{ n.giveCount }}</span>
+                </div>
+              </div>
+              <button class="nc-btn" (click)="openTradeWith(n.user.username)">
+                <ion-icon name="swap-horizontal"></ion-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <div class="nearby-hint">Activá tu ubicación para ver coleccionistas a menos de 5 km con cromos que te sirven (y a los que les sirven los tuyos).</div>
+    }
+  </div>
+
   <div class="tabs">
     <button class="t-btn" [class.active]="tab() === 'incoming'" (click)="setTab('incoming')">
       <span>Recibidas</span>
@@ -194,6 +243,11 @@
                 </button>
               </div>
             }
+
+            <button class="chat-btn" (click)="openChat(p)">
+              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+              Chatear para acordar
+            </button>
             }
           </div>
         }

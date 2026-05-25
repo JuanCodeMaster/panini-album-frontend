@@ -14,10 +14,14 @@ import {
   time,
   chevronBack,
   trash,
+  locationOutline,
+  navigateOutline,
+  chatbubbleEllipsesOutline,
 } from 'ionicons/icons';
 import { SocialService } from '../../core/services/social.service';
 import { CatalogService } from '../../core/services/catalog.service';
-import { TradeProposal } from '../../core/models/trade-proposal.model';
+import { LocationService } from '../../core/services/location.service';
+import { TradeProposal, NearbySuggestion } from '../../core/models/trade-proposal.model';
 import { Country, Sticker, flagUrl } from '../../core/models/catalog.model';
 
 type Tab = 'incoming' | 'outgoing' | 'history';
@@ -32,6 +36,9 @@ export class ProposalsPage implements OnInit {
   private readonly social = inject(SocialService);
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
+  readonly location = inject(LocationService);
+
+  readonly nearby = signal<NearbySuggestion[]>([]);
 
   readonly loading = signal(true);
   readonly errorMessage = signal<string | null>(null);
@@ -60,11 +67,47 @@ export class ProposalsPage implements OnInit {
       time,
       chevronBack,
       trash,
+      locationOutline,
+      navigateOutline,
+      chatbubbleEllipsesOutline,
     });
   }
 
   ngOnInit(): void {
     this.refresh();
+    this.location.loadStatus().then(() => this.loadNearby());
+  }
+
+  loadNearby(): void {
+    if (!this.location.sharing()) {
+      this.nearby.set([]);
+      return;
+    }
+    this.social.nearbySuggestions().subscribe({
+      next: (list) => this.nearby.set(list),
+      error: () => this.nearby.set([]),
+    });
+  }
+
+  async toggleLocation(): Promise<void> {
+    if (this.location.sharing()) {
+      await this.location.disable();
+      this.nearby.set([]);
+    } else {
+      const ok = await this.location.enable();
+      if (ok) this.loadNearby();
+    }
+  }
+
+  openTradeWith(username: string): void {
+    this.router.navigate(['/tabs/friends', username, 'trade']);
+  }
+
+  openChat(p: TradeProposal): void {
+    const other = this.otherUser(p);
+    this.router.navigate(['/tabs/trades', p.id, 'chat'], {
+      queryParams: { with: other.displayName || other.username },
+    });
   }
 
   refresh(): void {

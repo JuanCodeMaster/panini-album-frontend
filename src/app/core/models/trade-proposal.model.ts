@@ -30,3 +30,21 @@ export interface TradeSuggestion {
   sampleGive: Sticker[];
   sampleReceive: Sticker[];
 }
+
+export interface NearbySuggestion {
+  user: Friend;
+  distanceKm: number;
+  giveCount: number;
+  receiveCount: number;
+  sampleGive: Sticker[];
+  sampleReceive: Sticker[];
+}
+
+export interface TradeMessage {
+  id: number;
+  proposalId: number;
+  senderUsername: string;
+  senderDisplayName: string | null;
+  body: string;
+  createdAt: string;
+}

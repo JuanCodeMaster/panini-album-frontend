@@ -58,6 +58,10 @@ export const routes: Routes = [
         loadComponent: () => import('../social/proposals/proposals.page').then((m) => m.ProposalsPage),
       },
       {
+        path: 'trades/:id/chat',
+        loadComponent: () => import('../social/chat/chat.page').then((m) => m.ChatPage),
+      },
+      {
         path: '',
         redirectTo: 'tab1',
         pathMatch: 'full',

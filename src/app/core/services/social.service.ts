@@ -3,7 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Friend, Friendship, TradeMatch } from '../models/social.model';
-import { CreateProposalRequest, TradeProposal, TradeSuggestion } from '../models/trade-proposal.model';
+import {
+  CreateProposalRequest,
+  TradeProposal,
+  TradeSuggestion,
+  NearbySuggestion,
+  TradeMessage,
+} from '../models/trade-proposal.model';
 
 @Injectable({ providedIn: 'root' })
 export class SocialService {
@@ -55,6 +61,19 @@ export class SocialService {
 
   tradeSuggestions(limit = 3): Observable<TradeSuggestion[]> {
     return this.http.get<TradeSuggestion[]>(`${this.tradesUrl}/suggestions?limit=${limit}`);
+  }
+
+  nearbySuggestions(): Observable<NearbySuggestion[]> {
+    return this.http.get<NearbySuggestion[]>(`${this.tradesUrl}/nearby`);
+  }
+
+  // ── Chat de propuesta ──
+  proposalMessages(proposalId: number): Observable<TradeMessage[]> {
+    return this.http.get<TradeMessage[]>(`${this.tradesUrl}/proposals/${proposalId}/messages`);
+  }
+
+  sendProposalMessage(proposalId: number, body: string): Observable<TradeMessage> {
+    return this.http.post<TradeMessage>(`${this.tradesUrl}/proposals/${proposalId}/messages`, { body });
   }
 
   // ── Trade proposals ──

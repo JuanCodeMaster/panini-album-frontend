@@ -54,6 +54,9 @@
 	     subida. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!-- Ubicación para sugerencias de intercambio por cercanía (opt-in) -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Usamos tu ubicación solo para sugerirte intercambios con coleccionistas cercanos. Puedes desactivarlo cuando quieras.</string>
 	<!-- DEV: permite HTTP cleartext a localhost y red LAN para alcanzar el
 	     backend Spring Boot durante desarrollo. En producción quítalo y
 	     usa HTTPS. -->

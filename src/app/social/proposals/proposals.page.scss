@@ -469,3 +469,169 @@
     &:active { background: var(--m-hairline); }
   }
 }
+
+// ── Cerca de ti ──
+.nearby-block {
+  margin: 4px 14px 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--m-accent) 0%, #1a2a57 100%);
+  color: #FFF;
+}
+
+.nearby-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  .nh-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    ion-icon { font-size: 18px; color: var(--m-gold); }
+  }
+
+  .loc-toggle {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 99px;
+    cursor: pointer;
+    min-height: 30px;
+
+    ion-spinner { width: 16px; height: 16px; }
+
+    &.on {
+      background: var(--m-gold);
+      color: #3A2A05;
+      border-color: var(--m-gold);
+    }
+  }
+}
+
+.loc-error {
+  margin-top: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #FFD7D7;
+}
+
+.nearby-hint,
+.nearby-empty {
+  margin-top: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.nearby-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nearby-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  padding: 8px 10px;
+
+  .nc-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--m-gold);
+    color: #3A2A05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .nc-info { flex: 1; min-width: 0; }
+
+  .nc-name {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+
+    .nc-dist {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-weight: 800;
+      color: var(--m-gold);
+      ion-icon { font-size: 12px; }
+    }
+  }
+
+  .nc-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    background: var(--m-primary);
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    ion-icon { font-size: 20px; }
+    &:active { transform: scale(0.94); }
+  }
+}
+
+// ── Botón chat en propuesta ──
+.chat-btn {
+  margin-top: 12px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--m-accent);
+  background: transparent;
+  color: var(--m-accent);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+
+  ion-icon { font-size: 18px; }
+  &:active { background: var(--m-hairline); }
+}
