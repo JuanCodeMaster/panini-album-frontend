@@ -194,12 +194,9 @@
                           <img [src]="s.imageUrl" alt="" class="bg" />
                         } @else if (specialFlag(s)) {
                           <img [src]="specialFlag(s)" alt="" class="bg" />
-                        } @else {
-                          <ion-icon [name]="specialIconFor(s)" class="sp-ph"></ion-icon>
                         }
-                      } @else {
-                        <ion-icon [name]="specialIconFor(s)" class="sp-ph muted"></ion-icon>
                       }
+                      <span class="slot-num special-code">{{ specialLabel(s) }}</span>
                       @if (s.foil) {
                         <span class="foil-tag">F</span>
                       }

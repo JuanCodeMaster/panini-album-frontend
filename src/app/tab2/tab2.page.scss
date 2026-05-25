@@ -69,16 +69,13 @@
 }
 
 .special-slot {
-  .sp-ph {
-    position: relative;
-    font-size: 26px;
-    color: var(--m-muted);
-    opacity: 0.5;
-
-    &.muted { opacity: 0.32; }
+  // El código (FWC 1, CC 1…) es más largo que un número de país
+  .special-code {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 0 3px;
   }
-
-  &.owned .sp-ph { color: #FFF; opacity: 1; }
 }
 
 .toolbar {

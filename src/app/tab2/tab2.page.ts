@@ -179,13 +179,9 @@ export class Tab2Page implements OnInit {
     return g.stickers.filter((s) => this.isOwned(s.code)).length;
   }
 
-  specialIconFor(s: Sticker): string {
-    if (s.stickerType === 'LOGO_PANINI') return 'star';
-    if (s.stickerType === 'HOST') return 'sparkles';
-    if (s.stickerType === 'MUSEUM') return 'trophy';
-    if (s.stickerType === 'TEAM_PHOTO') return 'people';
-    if (s.stickerType === 'BADGE') return 'shield-outline';
-    return 'sparkles';
+  /** Código del cromo formateado: "FWC1" → "FWC 1", "CC10" → "CC 10", "00" → "00" */
+  specialLabel(s: Sticker): string {
+    return s.code.replace(/^([A-Za-z]+)(\d+)$/, '$1 $2');
   }
 
   specialFlag(s: Sticker): string {
