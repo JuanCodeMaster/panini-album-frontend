@@ -49,48 +49,53 @@
       </div>
 
       <div class="groups">
-        @for (g of grouped(); track g.countryCode || g.countryName) {
-          <div class="group">
-            <div class="group-header" (click)="openCountry(g.countryCode)">
+        @for (g of grouped(); track groupKey(g)) {
+          <div class="group" [class.cocacola]="g.sectionCode === 'COCACOLA'" [class.collapsed]="isCollapsed(g)">
+            <div class="group-header" (click)="toggleGroup(g)">
               @if (g.iso2) {
                 <img [src]="flag(g.iso2)" [alt]="g.countryName" class="group-flag" />
               } @else {
-                <div class="group-flag placeholder">★</div>
+                <div class="group-flag placeholder"><ion-icon name="sparkles"></ion-icon></div>
               }
               <div class="group-info">
                 <div class="group-name">{{ g.countryName }}</div>
                 @if (g.countryCode) {
                   <div class="group-code">{{ g.countryCode }}</div>
+                } @else if (g.sectionCode === 'COCACOLA') {
+                  <div class="group-code">ESPECIALES</div>
                 }
               </div>
               <div class="group-count">
                 <span class="num">{{ g.stickers.length }}</span>
                 <span class="lbl">faltan</span>
               </div>
-              @if (g.countryCode) {
-                <ion-icon name="chevron-forward" class="chev"></ion-icon>
-              }
+              <ion-icon name="chevron-forward" class="chev" [class.open]="!isCollapsed(g)"></ion-icon>
             </div>
 
-            <div class="missing-list">
-              @for (s of g.stickers; track s.code) {
-                <div class="missing-row">
-                  <div class="num-badge" [class.foil]="s.foil">
-                    {{ s.numberInCountry ? '#' + s.numberInCountry : s.code }}
-                  </div>
-                  <div class="missing-info">
-                    <div class="missing-name">{{ s.displayName }}</div>
-                    <div class="missing-meta">
-                      <span class="code">{{ s.code }}</span>
-                      @if (s.foil) {
-                        <span class="foil-tag">FOIL</span>
-                      }
+            @if (!isCollapsed(g)) {
+              <div class="missing-list">
+                @for (s of g.stickers; track s.code) {
+                  <div class="missing-row" (click)="openCountry(g.countryCode)">
+                    <div class="num-badge" [class.foil]="s.foil">
+                      {{ s.numberInCountry ? '#' + s.numberInCountry : s.code }}
                     </div>
+                    <div class="missing-info">
+                      <div class="missing-name">{{ s.displayName }}</div>
+                      <div class="missing-meta">
+                        <span class="code">{{ s.code }}</span>
+                        @if (s.sectionCode === 'COCACOLA') {
+                          <span class="section-tag">COCA-COLA</span>
+                        }
+                        @if (s.foil) {
+                          <span class="foil-tag">FOIL</span>
+                        }
+                      </div>
+                    </div>
+                    <ion-icon [name]="iconFor(s.stickerType)" class="type-icon" [class.foil]="s.foil"></ion-icon>
                   </div>
-                  <ion-icon [name]="iconFor(s.stickerType)" class="type-icon" [class.foil]="s.foil"></ion-icon>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            }
           </div>
         }
       </div>

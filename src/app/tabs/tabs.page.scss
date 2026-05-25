@@ -1,8 +1,9 @@
 .mundial-tabbar {
   // Barra fija al fondo, ancho completo (no flotante → no desaparece).
   width: 100%;
-  height: calc(60px + var(--app-safe-bottom, 0px));
-  padding: 4px 0 var(--app-safe-bottom, 0px);
+  height: 60px;
+  min-height: 60px;
+  padding: 4px 0;
   margin: 0;
   border: none;
   border-radius: 0;

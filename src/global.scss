@@ -40,7 +40,7 @@
  * Padding inferior para que el tab bar fijo no tape contenido.
  * Va aquí (global) porque los estilos de tabs.page.scss son encapsulados
  * al componente TabsPage y no llegan a los ion-content de las páginas hijas.
- * Tab bar fijo: 60px de alto + safe area inferior.
+ * Tab bar fijo: 60px de alto visual; el contenido reserva ademÃ¡s el safe area.
  * -------------------------------------------------------------------------- */
 :root {
   --app-safe-top: env(safe-area-inset-top, 0px);
